@@ -1,0 +1,5 @@
+[frontends]
+  [frontends.frontend1]
+  backend = "fabric:/GettingStartedApplication/WebService"
+    [frontends.frontend1.routes.test_1]
+    rule = "PathPrefixStrip: /test4"

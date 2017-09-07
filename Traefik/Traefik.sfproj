@@ -30,17 +30,19 @@
     <None Include="PublishProfiles\Local.1Node.xml" />
     <None Include="PublishProfiles\Local.5Node.xml" />
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
+    <None Include="Scripts\Update-Config.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\Startup.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.exe" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\certs\cacert.cer" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\certs\mycert.crt" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\certs\mycert.key" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\cacert.cer" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.crt" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.key" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\frontends.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\Settings.xml" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\traefik.toml" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
     <Content Include="packages.config" />
   </ItemGroup>

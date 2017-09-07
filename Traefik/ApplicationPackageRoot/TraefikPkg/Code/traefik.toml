@@ -14,14 +14,14 @@ debug = true
 #
 # Optional
 #
-traefikLogsFile = "log/traefik.log"
+# traefikLogsFile = "log/traefik.log"
 
 # Log level
 #
 # Optional
 # Default: "ERROR"
 
-logLevel = "DEBUG"
+logLevel = "INFO"
 
 # Entrypoints to be used by frontends that do not specify any entrypoint.
 # Each frontend can specify its own entrypoints.
@@ -39,21 +39,13 @@ defaultEntryPoints = ["http", "https"]
 [entryPoints.http]
 address = ":80"
 
-# Frontends definition
-#
-[frontends]
-[frontends.frontend1]
-backend="fabric:/GettingStartedApplication/WebService"
-[frontends.frontend1.routes.test_1]
-rule = "PathPrefixStrip: /test1"
-
 # Enable access logs
 # By default it will write to stdout and produce logs in the textual
 # Common Log Format (CLF), extended with additional fields.
 #
 # Optional
 #
-[accessLog]
+# [accessLog]
 
 # Sets the file path for the access log. If not specified, stdout will be used.
 # Intermediate directories are created if necessary.
@@ -84,7 +76,15 @@ rule = "PathPrefixStrip: /test1"
 address = ":8080"
 
 ################################################################
-# Service Fabric backend
+# File provider
+################################################################
+
+[file]
+
+directory = "config/"
+
+################################################################
+# Service Fabric provider
 ################################################################
 
 # Enable Service Fabric configuration backend
@@ -97,39 +97,10 @@ clustermanagementurl = "http://localhost:19080"
 apiversion = "3.0"
 
 # Client certifcate file path
-clientcertfilepath = "config/certs/mycert.crt"
+clientcertfilepath = "certs/mycert.crt"
 
 # Client certifcate key file path
-clientcertkeyfilepath = "config/certs/mycert.key"
+clientcertkeyfilepath = "certs/mycert.key"
 
 # CA certifcate file path
-cacertfilepath = "config/certs/cacert.cer"
-
-################################################################
-# Docker configuration backend
-################################################################
-
-# Enable Docker configuration backend
-# [docker]
-
-# Docker server endpoint. Can be a tcp or a unix socket endpoint.
-#
-# Required
-# Default: "unix:///var/run/docker.sock"
-#
-# endpoint = "tcp://10.10.10.10:2375"
-
-# Default domain used.
-# Can be overridden by setting the "traefik.domain" label on a container.
-#
-# Optional
-# Default: ""
-#
-# domain = "docker.localhost"
-
-# Expose containers by default in traefik
-#
-# Optional
-# Default: true
-#
-# exposedbydefault = true
+cacertfilepath = "certs/cacert.cer"
