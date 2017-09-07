@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ApplicationManifest ApplicationTypeName="TraefikType"
-                     ApplicationTypeVersion="1.0.0"
-                     xmlns="http://schemas.microsoft.com/2011/01/fabric"
-                     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ApplicationManifest ApplicationTypeName="TraefikType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="Traefik_InstanceCount" DefaultValue="-1" />
   </Parameters>
@@ -17,7 +13,6 @@
       <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
     </Policies>
   </ServiceManifestImport>
-  
   <DefaultServices>
     <!-- The section below creates instances of service types, when an instance of this 
          application type is created. You can also create one or more instances of service type using the 
@@ -30,7 +25,6 @@
       </StatelessService>
     </Service>
   </DefaultServices>
-  
   <Principals>
     <Users>
       <User Name="AdminUser">
