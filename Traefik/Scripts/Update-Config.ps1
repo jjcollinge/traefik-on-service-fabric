@@ -35,6 +35,8 @@ if ( -Not (Test-Path -LiteralPath $ConfigPackages -PathType Container))
 	mkdir $ConfigPackages
 }
 
+filter timestamp {"$(Get-Date -Format G): $_"}
+
 #
 # Update the existing config files to reflect a patched configuration
 #
@@ -114,12 +116,14 @@ Try {
 }
 Catch
 {
+	Write-Error "Error occured updating configuration files - reverting to original files" | timestamp >> update.log
 	# Revert to original state by overwritting modified files with original backups
 	Copy-Item $CurrentServiceManifestBackupPath $CurrentServiceManifestPath
 	Copy-Item $CurrentApplicationManifestBackupPath $CurrentApplicationManifestPath
 }
 Finally
 {
+	Write-Output "Cleaning up temporary swap files" | timestamp >> update.log
 	# Remove backup files
 	Remove-Item -Force $CurrentServiceManifestBackupPath
 	Remove-Item -Force $CurrentApplicationManifestBackupPath

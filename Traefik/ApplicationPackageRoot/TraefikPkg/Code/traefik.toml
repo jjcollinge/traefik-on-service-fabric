@@ -76,14 +76,6 @@ address = ":80"
 address = ":8080"
 
 ################################################################
-# File provider
-################################################################
-
-[file]
-
-directory = "config/"
-
-################################################################
 # Service Fabric provider
 ################################################################
 
@@ -97,10 +89,10 @@ clustermanagementurl = "http://localhost:19080"
 apiversion = "3.0"
 
 # Client certifcate file path
-clientcertfilepath = "certs/mycert.crt"
+# clientcertfilepath = "certs/mycert.crt"
 
 # Client certifcate key file path
-clientcertkeyfilepath = "certs/mycert.key"
+# clientcertkeyfilepath = "certs/mycert.key"
 
 # CA certifcate file path
-cacertfilepath = "certs/cacert.cer"
+# cacertfilepath = "certs/cacert.cer"
