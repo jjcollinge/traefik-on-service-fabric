@@ -9,13 +9,6 @@
   <CodePackage Name="Code" Version="1.0.0">
     <!-- The SetupEntryPoint is an optional element used to specify a
          program to be executed before the service's code is launched. -->
-    <SetupEntryPoint>
-      <ExeHost>
-        <Program>Startup.bat</Program>
-        <WorkingFolder>CodePackage</WorkingFolder>
-        <ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />
-      </ExeHost>
-    </SetupEntryPoint>
     <EntryPoint>
       <ExeHost>
         <Program>traefik.exe</Program>
