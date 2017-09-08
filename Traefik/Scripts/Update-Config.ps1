@@ -1,9 +1,9 @@
-﻿# The following script is meant to perform a config
+# The following script is meant to perform a config
 # only in-place upgrade. This allows you to update
 # just config files/values and deploy them against
 # an existing code and data package.
 #
-#						WARNING
+#			WARNING
 # ---------------------------------------------------
 # This script expects the fabric:/Traefik application
 # to already be deployed. It also expects the current
@@ -116,14 +116,14 @@ Try {
 }
 Catch
 {
-	Write-Error "Error occured updating configuration files - reverting to original files" | timestamp >> update.log
+	Write-Error "Error occured updating configuration files - reverting to original files" | timestamp
 	# Revert to original state by overwritting modified files with original backups
 	Copy-Item $CurrentServiceManifestBackupPath $CurrentServiceManifestPath
 	Copy-Item $CurrentApplicationManifestBackupPath $CurrentApplicationManifestPath
 }
 Finally
 {
-	Write-Output "Cleaning up temporary swap files" | timestamp >> update.log
+	Write-Output "Cleaning up temporary swap files" | timestamp
 	# Remove backup files
 	Remove-Item -Force $CurrentServiceManifestBackupPath
 	Remove-Item -Force $CurrentApplicationManifestBackupPath
