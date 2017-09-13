@@ -14,8 +14,7 @@ To learn more about the Traefik model of Frontends and Backends [see their docum
 2. Open Traefik.sln
 3. Update the TOML file as appropriate in /ApplicationPackageRoot/TraefikPkg/Code/traefik.toml
     
-    - Add certificates to Traefik to enable communications with SF
-    - Generate the necessary files from PFX with the following command //todo: add command
+    - Generate the necessary files from PFX with the following command. [Guide here](https://gist.github.com/ericharth/8334664)
     - Add the files to /ApplicationPackageRoot/TraefikPkg/Code/certs
     - Uncomment clientcertfilepath, clientkeyfilepath and cacertfilepath in the TOML file. Ensuring these point to the certificate file
 
