@@ -2,9 +2,9 @@
 
 ## How does it work?
 
-Traefik is run in a Windows container. It uses it's ServiceFabric Provider to discover services, both statefull and stateless, and create a loadbalanced backends for each service. By default Health and Status are taken into account so traffic is only sent to healthy services ready to receive it. 
+Traefik is run in a Windows container and uses it's ServiceFabric Provider to discover services, both stateful and stateless, from the cluster. It then creates loadbalanced backends for each service. By default Health and Status are taken into account, so traffic is only sent to healthy services.
 
-It then uses ApplicationParameters or Custom configuration to expose frontends which allow external traffic to reach the backends. 
+ApplicationParameters or Custom configuration are then used to expose these backends by creating frontends which allow external traffic to be routed. 
 
 To learn more about the Traefik model of Frontends and Backends [see their documentation](https://docs.traefik.io/basics/). 
 
@@ -40,11 +40,11 @@ Under the ApplicationParameters/Local.5Node.xml (this name will vary depend on y
 
 ## Expose services using Traefik: Custom Configuration
 
-Traefik has a nice set of features from [Rate limiting](https://docs.traefik.io/basics/#backends) to [Circuit breakers](https://docs.traefik.io/basics/#backends) at the backend and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) on frontends. 
+Traefik has a nice set of features from [Rate limiting](https://docs.traefik.io/basics/#backends) to [Circuit breakers](https://docs.traefik.io/basics/#backends) at the backend also [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) on frontends. 
 
-These can all be used and customized, when deploying on Service Fabric, through the configuration template file. The template file is used to generate a TOML file configures Traefik. Here are some [examples of normal TOML files](https://docs.traefik.io/user-guide/examples/).
+These can all be used and customized, when deploying on Service Fabric, through the configuration template file. The template file is used to generate a TOML file which configures Traefik. Here are some [examples of normal TOML files](https://docs.traefik.io/user-guide/examples/).
 
-The template file is deployed and managed by SF using the inbuilt configuration mechanism. Users can update the file and then use the script /Traefik/Scripts/Update-Config.ps1 to have SF roll out this updated configuration to their cluster.
+The template file is deployed and managed by SF using configuration packages. Users can update the file and then use the script /Traefik/Scripts/Update-Config.ps1 to publish updates.
 
 There is more detail on using the templates [here](Docs/CustomTemplates.MD) and [samples](Docs/SampleTemplates)
 
