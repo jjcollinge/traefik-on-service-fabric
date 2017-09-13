@@ -2,17 +2,17 @@
 
 ## Introduction to Templating Language
 
-Traefik uses golangs [templating language](https://golang.org/pkg/text/template/) but don't be put off it's relatively simple to get your head around and you don't need to know how to program in golang. 
+Traefik uses golang's [templating language](https://golang.org/pkg/text/template/). Don't be put off though, it's relatively simple to get your head around and you don't need to know how to program in golang to use it. 
 
-A good resource to start which is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines), Helm is an app packaing system for Kubernetes which also uses golang templating and they're docs are great. 
+A good resource to start which is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines), Helm is an app packaging system for [Kubernetes](https://kubernetes.io/) which also uses golang templating and their docs are great. 
 
 ## TemplateObject or How to access cluster information?
 
-In the templates you have access to an Object with information about the services, application, partitions, instance and replicas available in the cluster. 
+In the templates you have access to an Object with information about the services, application, partitions, instance and replicas available in the Service Fabric cluster. 
 
 This can be accessed using the keyword ".Services", for a useless but simple example "Number of Services:{{ len .Services}}" would print the number of services in the cluster. 
 
-Child properties can be accessed with dot notation, for example (Tip: Range is a Foreach loop, roughly):
+Child properties can be accessed with dot notation, for example (Tip: `Range` is roughly equivalent to a `foreach` loop in other languages):
 
 ```
 
@@ -24,47 +24,47 @@ Child properties can be accessed with dot notation, for example (Tip: Range is a
 
 ```
 
-This outputs the parition ID and it's kind, Stateful or Stateless, for each service in the cluster. Skip to the full examples to see how this is used to build the TOML config. 
+This outputs the `Parition ID` and the `Service Kind` (Stateful or Stateless) for each service in the cluster. Skip to the full examples to see how this is used to build the TOML config.
 
 ## ServiceFabric Helper Function
 
-These are little functions which can be used to make things easier. Mostly they operate on an object like a Service, Instance or Replica. 
+These are functions which can be used to make things easier when building your template. Mostly they operate on an object like a Service, Instance or Replica.
 
-Functions 
+### Functions 
 
-- isPrimary: Returns true if the Replica has a ReplicaRole of Primary
+- `isPrimary`: Returns `true` if the Replica has a `ReplicaRole` of "Primary"
     - Takes a Replica (.Services[].Paritions[].Replicas)
-    - Example: {{ if isPrimary $replica}}
+    - Example: `{{ if isPrimary $replica}}`
 
 
-- isHealthy: Returns true if the Replica/Instance has a ReplicaStatus == Ready and HealthState != Error
+- `isHealthy`: Returns `true` if the Replica/Instance has a `ReplicaStatus == Ready` and `HealthState != Error`
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ if isHealthy $replica}}
+    - Example: `{{ if isHealthy $replica}}`
 
 
-- hasHTTPEndpoint: Returns true if the Replica/Instance has an HTTP based endpoint defined in SF
+- `hasHTTPEndpoint`: Returns `true` if the Replica/Instance has an HTTP based endpoint defined in SF
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ if hasHTTPEndpoint $replica}}
+    - Example: `{{ if hasHTTPEndpoint $replica}}`
 
 
-- getDefaultEndpoint: Returns url of endpoint for Replica from Service Manifest, if multiple picks first endpoint.
+- `getDefaultEndpoint`: Returns the `url` of the default endpoint for a Replica from it's `ServiceManifest`. If multiple endpoints exists, it picks the first one.
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ print (getDefaultEndpoint $replica)}}
+    - Example: `{{ print (getDefaultEndpoint $replica)}}`
 
 
-- getNamedEndpoint: Returns url of named endpoint for Replica
+- `getNamedEndpoint`: Returns the `url` of named endpoint for Replica
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances) and an endpoint name.
-    - Example: {{ print (getDefaultEndpoint $replica "NodeJsEndpoint")}}
+    - Example: `{{ print (getDefaultEndpoint $replica "NodeJsEndpoint")}}`
 
 
-- getApplicationParameter: Returns the value of an Application Parameter from the ApplicationManifest
+- `getApplicationParameter`: Returns the value of an Application Parameter from the `ApplicationManifest`
     - Takes an Application (.Services[].ApplicationData) and a Parameter Name
-    - Example: {{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}
+    - Example: `{{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}`
 
 
-- doesAppParamContain: Returns true if the Application Parameter containers the specified string
+- `doesAppParamContain`: Returns `true` if the Application Parameter containers the specified string
     - Takes an Application (.Services[].ApplicationData), a Parameter Name and the string to search for in the parameter value
-    - Example: Checks if "SomeAppParam" contains the service name {{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}
+    - Example: Checks if "SomeAppParam" contains the service name `{{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}`
 
 
 ## Example 1: Manual Frontend Definition
@@ -83,7 +83,7 @@ Stateless Services:
     - View (fabric:/Shopping/View)
     - Search (fabric:/Shopping/Search)
 
-In the API exposed we'll remap the services as follows:
+In the exposed API we'll remap the services as follows:
      http://cluster/basket -> fabric:/Shopping/Checkout as http://hostingnode/ (stripping the /basket)
      http://cluster/shop -> fabric:/Shopping/View as http://hostingnode/shop (keeping /shop)
 
