@@ -28,7 +28,7 @@ This outputs the parition ID and it's kind, Stateful or Stateless, for each serv
 
 ## ServiceFabric Helper Function
 
-These are little functions in which can be used in the template to make things easier. Mostly they operate on an object like a Service, Instance or Replica. 
+These are little functions which can be used to make things easier. Mostly they operate on an object like a Service, Instance or Replica. 
 
 Functions 
 
@@ -69,7 +69,7 @@ Functions
 
 ## Example 1: Manual Frontend Definition
 
-In this example we're going to publish out several backend services to appear as a single API. 
+In this example we're going to publish out several Service Fabric services to appear as a single API externally. 
 
 Assuming our cluster has the following:
 
@@ -135,12 +135,12 @@ In the API exposed we'll remap the services as follows:
         expression = "NetworkErrorRatio() > 0.5"
 
         # Here we combine 'range' and 'if' to add a server for 
-        # each instance running in the cluster. Traefik will
+        # each instance running the service in the cluster. Traefik will
         # balance load accross these instances. 
         {{range $instance := $partition.Instances}}
           
           # Here we use our first two helper functions from the Traefik SF provider
-          # 'isHealthy' and 'hasHTTPEndpoint' there take an Instance or Replica and 
+          # 'isHealthy' and 'hasHTTPEndpoint'. These take an Instance or Replica and 
           # return true if it's healthy or has and http endpoint respectively. 
           # A full list of the available functions linked to earlier in these docs. 
           {{if and (isHealthy $instance) (hasHTTPEndpoint $instance)}}
