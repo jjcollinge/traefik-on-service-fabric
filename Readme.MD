@@ -33,11 +33,11 @@ If you're working against a local development cluster skip to step 9.
 
 6. Please read to the [Certificates section](#certificates) before running the `Create-Certs.ps1` script. 
 
-`.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt>`
+`.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt> -CASubject "/C=GB/ST=England/L=London/O=Jon/CN=www.example.com"`
 
 7. Copy your generated certificate to the folder Traefik expects to find them in `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\certs`
 
-`cp .\certs\* ..\ApplicationPackageRoot\TraefikPkg\Code\certs`
+`cp .\certs\* ..\ApplicationPackageRoot\TraefikPkg\Code\certs\`
 
 8. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
 
@@ -92,13 +92,21 @@ The simplest way to expose a Service Fabric service via Traefik is by using Serv
 1. Add a default parameter to your `ApplicationPackageRoot/ApplicationManifest.xml`
 
 ```xml
-<Parameter Name="TraefikPublish" DefaultValue="" />
+<Parameters>
+    ...
+    <Parameter Name="TraefikPublish" DefaultValue="" />
+    ...
+</Parameters>
 ```
 
 2. Under the `..\ApplicationParameters\` directory you will find a few files. Depending on your intended target `local` or `cloud` you'll need to edit the appropriate file i.e. `Local.5node.xml`. Add a parameter with the name `TraefikPublish` and the value as a comma seperated list of service names you wish to expose.
 
 ```xml
- <Parameter Name="TraefikPublish" Value="fabric:/GettingStartedApplication/WebService" />
+<Parameters>
+    ...
+    <Parameter Name="TraefikPublish" Value="fabric:/GettingStartedApplication/WebService" />
+    ...
+</Parameters>
 ```
 
 ## Advanced Configuration
