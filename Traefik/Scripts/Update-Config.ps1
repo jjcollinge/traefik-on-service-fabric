@@ -8,11 +8,14 @@ Updates, packages and deploys an Application's Configuration
 .PARAMETER ServiceFabricConnectionEndpoint 
 Endpoint address for Service Fabric connection i.e. http://localhost:19000
 
-.PARAMETER ServiceFabricImageStore 
-Path to Service Fabric Image Store location
+.PARAMETER SecureCluster 
+Indicated whether or not this is a secure cluster connection
+
+.PARAMETER PfxCertThumbprint 
+Certificate thumbprint for secure cluster connection
 
 .EXAMPLE
-PS> Update-Config.ps1 -ServiceFabricConnectionEndpoint http://localhost:19000
+PS> Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
 
 .NOTES
 This script expects the 'fabric:/Traefik' application
@@ -29,10 +32,22 @@ param (
    $ServiceFabricConnectionEndpoint = "localhost:19000",
    [Parameter(Mandatory=$false)]
    [string]
-   $ServiceFabricImageStore = "file:C:\SfDevCluster\Data\ImageStoreShare"
+   $PfxCertThumbprint,
+   [Parameter(Mandatory=$true)]
+   [boolean]
+   $SecureCluster
 )
 
 filter timestamp {"$(Get-Date -Format G): $_"}
+
+if ($SecureCluster)
+{
+    if (-Not(Test-Path variable:PfxCertThumbprint))
+    {
+        Write-Host "PfxCertThumbprint must be provided when using a secure cluster endpoint"
+        exit
+    }
+}
 
 # Setup file system paths
 $ApplicationPackageRoot = [io.Path]::Combine((Split-Path -Path $pwd.Path -Parent), "ApplicationPackageRoot")
@@ -92,7 +107,7 @@ Try {
 	################################
 
 	# Create new application package
-	$NewAppPkgName = "ConfigPkg" + $NewAppTypeVer
+	$NewAppPkgName = "ConfigPkg" + ([int][double]::Parse((Get-Date -UFormat %s)))
 	$NewAppPkg = [io.Path]::Combine($ConfigPackages, $NewAppPkgName)
 	mkdir $NewAppPkg
 
@@ -116,8 +131,16 @@ Try {
 	################################
 
 	$TraefikApplicationName = "fabric:/Traefik"
-	Connect-ServiceFabricCluster -ConnectionEndpoint $ServiceFabricConnectionEndpoint
-	Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $NewAppPkg -ImageStoreConnectionString $ServiceFabricImageStore -ApplicationPackagePathInImageStore $NewAppPkgName
+    
+    
+    if ($SecureCluster)
+    {
+        Connect-ServiceFabricCluster -ConnectionEndpoint $ServiceFabricConnectionEndpoint -X509Credential -ServerCertThumbprint $PfxCertThumbprint -FindType FindByThumbprint -FindValue $PfxCertThumbprint -StoreLocation CurrentUser -StoreName My
+    } else {
+        Connect-ServiceFabricCluster -ConnectionEndpoint $ServiceFabricConnectionEndpoint
+    }
+
+	Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $NewAppPkg -ApplicationPackagePathInImageStore $NewAppPkgName
 	Register-ServiceFabricApplicationType -ApplicationPathInImageStore $NewAppPkgName
 	Start-ServiceFabricApplicationUpgrade -ApplicationName $TraefikApplicationName -ApplicationTypeVersion $NewAppTypeVer -HealthCheckStableDurationSec 60 -UpgradeDomainTimeoutSec 1200 -UpgradeTimeout 3000 -FailureAction Rollback -Monitored
 }
