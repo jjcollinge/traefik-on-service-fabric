@@ -31,10 +31,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\cacert.cer" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.crt" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.key" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert.crt" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert.key" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert_encrypted.key" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.exe" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Config\frontends.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\Settings.xml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
