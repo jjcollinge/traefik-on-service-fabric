@@ -57,12 +57,10 @@ param (
 # Functions
 ############################
 
-
 function BuildOutputPath ([String]$fileName, [String]$fileExtension) {
     $OutputPath = Join-Path -Path $OutputCertDir -ChildPath ($fileName + $fileExtension)
     return $OutputPath
 }
-
 
 ############################
 # Test Prerequisites
@@ -117,6 +115,7 @@ Get-Content $PfxPassphraseFilePath | Out-File $PemPassphraseFilePath
 # Creates a passphrase encrypted .key file
 $EncryptedClientKeyOutputPath = BuildOutputPath -fileName $ClientCertOutputName -fileExtension "_encrypted.key"
 openssl pkcs12 -in $PfxCertFilePath -nocerts -out $EncryptedClientKeyOutputPath -passin file:$PfxPassphraseFilePath -passout file:$PemPassphraseFilePath > $null 2>&1
+
 # Extract client certificate
 # Creates a .crt certificate file
 $ClientCertOutputPath = BuildOutputPath -fileName $ClientCertOutputName -fileExtension ".crt"
