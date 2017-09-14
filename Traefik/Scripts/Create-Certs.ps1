@@ -126,7 +126,7 @@ openssl pkcs12 -in $PfxCertFilePath -clcerts -nokeys -out $ClientCertOutputPath 
 $ClientKeyOutputPath = BuildOutputPath -fileName $ClientCertOutputName -fileExtension ".key"
 openssl rsa -in $EncryptedClientKeyOutputPath -out $ClientKeyOutputPath -passin file:$PemPassphraseFilePath > $null 2>&1
 
-# Generates a Root CA certificate using our private key file 
+# Generates a Root CA certificate using our private key file
 $CACertOutputPath = BuildOutputPath -fileName $CACertOutputName -fileExtension ".cer"
 openssl req -x509 -new -nodes -key $ClientKeyOutputPath -days $Duration -out $CACertOutputPath -subj $CASubject > $null 2>&1
 
