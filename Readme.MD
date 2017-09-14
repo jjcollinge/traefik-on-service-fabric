@@ -29,9 +29,9 @@ If you're working against a local development cluster skip to step 9.
 4. Set your execution policy to unrestricted to allow the scripts to run
 `Set-ExectuionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`
 
-5. Create a passphrase ANSI text file with suitable permissions and write the .Pfx passphrase to it.
+5. Create a passphrase ANSI text file with suitable permissions and write the `*.pfx` passphrase to it.
 
-6. Please read to the [Certificates section](#certificates) before running the `Create-Certs.ps1` script. 
+6. Please read the [Certificates section](#certificates) before running the `Create-Certs.ps1` script... ok read it? Run the `Create-Certs.ps1` script.
 
 `.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt> -CASubject "/C=GB/ST=England/L=London/O=Jon/CN=www.example.com"`
 
@@ -41,7 +41,7 @@ If you're working against a local development cluster skip to step 9.
 
 8. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
 
-9. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric] provider tag is uncommented.
+9. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric]` provider tag is uncommented too.
 
 ```toml
 ################################################################
@@ -67,7 +67,7 @@ apiversion = "3.0"
 # cacertfilepath = "certs/cacert.cer"
 ```
 
-10. You now have a choice (Jikes!). See [simple configuration](#simple-configuration) or [advanced configuration](#advanced-configuration)
+10. You now have a choice (Yikes!). See [simple configuration](#simple-configuration) or [advanced configuration](#advanced-configuration)
 
 11. Once configured, you can simply publish Traefik from Visual Studio like any other Service Fabric service.
 
@@ -78,6 +78,10 @@ apiversion = "3.0"
 ![img](Docs/Images/traefikonsf.png)
 
 14. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...\traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+
+```
+.\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
+```
 
 ## How does it work?
 
@@ -108,12 +112,13 @@ The simplest way to expose a Service Fabric service via Traefik is by using Serv
     ...
 </Parameters>
 ```
+3. To make sure the Service Fabric provider uses it's default configuration. Please remove any existing `toml.tmpl` file from the folder `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\`.
 
 ## Advanced Configuration
 
 Traefik has a more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
 
-These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/).
+These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/). To leverage your own TOML template file, simply create a file with the extension `.toml.tmpl` in the folder `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\`. Do this before you deploy Treafik for the first time, or use the `Update-Config.ps1` as shown in Step 14.
 
 When configuring your template files, please note that the Service Fabric Traefik provider will dynamically inject your service endpoints as backend servers. This means you can add configuration such as load balancing rules which will be applied to the injected servers at runtime.
 
