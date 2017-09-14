@@ -1,30 +1,40 @@
-# The following script is meant to perform a config
-# only in-place upgrade. This allows you to update
-# just config files/values and deploy them against
-# an existing code and data package.
-#
-#			WARNING
-# ---------------------------------------------------
-# This script expects the fabric:/Traefik application
-# to already be deployed. It also expects the current
-# solution versions to match the deployed versions of
-# the code/config/data packages.
-# ---------------------------------------------------
-#
+<#
+.SYNOPSIS 
+Updates, packages and deploys an Application's Configuration
 
- param (
-    [Parameter(Mandatory=$false)]
-    [string]
-    $ServiceFabricConnectionEndpoint = "localhost:19000",
-    [Parameter(Mandatory=$false)]
-    [string]
-    $ServiceFabricImageStore = "file:C:\SfDevCluster\Data\ImageStoreShare"
- )
+.DESCRIPTION
+Updates, packages and deploys an Application's Configuration
 
-#
-# Setup required paths to manifest files and directories
-#
+.PARAMETER ServiceFabricConnectionEndpoint 
+Endpoint address for Service Fabric connection i.e. http://localhost:19000
 
+.PARAMETER ServiceFabricImageStore 
+Path to Service Fabric Image Store location
+
+.EXAMPLE
+PS> Update-Config.ps1 -ServiceFabricConnectionEndpoint http://localhost:19000
+
+.NOTES
+This script expects the 'fabric:/Traefik' application
+to already be deployed to the Service Fabric cluster.
+It also expects the current solution versions to match
+the deployed versions of the code/config/data packages.
+
+Author: @dotjson
+#>
+
+param (
+   [Parameter(Mandatory=$false)]
+   [string]
+   $ServiceFabricConnectionEndpoint = "localhost:19000",
+   [Parameter(Mandatory=$false)]
+   [string]
+   $ServiceFabricImageStore = "file:C:\SfDevCluster\Data\ImageStoreShare"
+)
+
+filter timestamp {"$(Get-Date -Format G): $_"}
+
+# Setup file system paths
 $ApplicationPackageRoot = [io.Path]::Combine((Split-Path -Path $pwd.Path -Parent), "ApplicationPackageRoot")
 $TraefikPackage = [io.Path]::Combine($ApplicationPackageRoot, "TraefikPkg")
 $ConfigPackages = [io.Path]::Combine($ApplicationPackageRoot, "ConfigPkgs")
@@ -34,12 +44,6 @@ if ( -Not (Test-Path -LiteralPath $ConfigPackages -PathType Container))
 {
 	mkdir $ConfigPackages
 }
-
-filter timestamp {"$(Get-Date -Format G): $_"}
-
-#
-# Update the existing config files to reflect a patched configuration
-#
 
 # Read current service manifest
 $CurrentServiceManifestPath = [io.Path]::Combine($TraefikPackage, "ServiceManifest.xml")
@@ -81,9 +85,11 @@ Try {
 	# Write updates to application manifest
 	$CurrentApplicationManifestXML.Save($CurrentApplicationManifestPath)
 
-	#
-	# Create a new (config only) application package to deploy to the Service Fabric cluster
-	#
+    ################################
+	# Create a new (config only) application
+    # package to deploy to the Service
+    # Fabric cluster
+	################################
 
 	# Create new application package
 	$NewAppPkgName = "ConfigPkg" + $NewAppTypeVer
@@ -104,9 +110,10 @@ Try {
 	# Copy existing application manifest to new application package
 	Copy-Item $CurrentApplicationManifestPath $NewAppPkg
 
-	#
-	# Deploy new application package to Service Fabric cluster
-	#
+	################################
+	# Deploy new application package
+    # to Service Fabric cluster
+	################################
 
 	$TraefikApplicationName = "fabric:/Traefik"
 	Connect-ServiceFabricCluster -ConnectionEndpoint $ServiceFabricConnectionEndpoint
@@ -117,6 +124,7 @@ Try {
 Catch
 {
 	Write-Error "Error occured updating configuration files - reverting to original files" | timestamp
+
 	# Revert to original state by overwritting modified files with original backups
 	Copy-Item $CurrentServiceManifestBackupPath $CurrentServiceManifestPath
 	Copy-Item $CurrentApplicationManifestBackupPath $CurrentApplicationManifestPath
@@ -124,6 +132,7 @@ Catch
 Finally
 {
 	Write-Output "Cleaning up temporary swap files" | timestamp
+
 	# Remove backup files
 	Remove-Item -Force $CurrentServiceManifestBackupPath
 	Remove-Item -Force $CurrentApplicationManifestBackupPath
