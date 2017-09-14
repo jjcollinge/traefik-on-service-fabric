@@ -22,7 +22,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 2. Open the `Traefik.sln` file in Visual Studio
 
-If working against a local development cluster skip to step 5
+If you're working against a local development cluster skip to step 7.
 
 3. Download or copy your clusters `.pfx` certificate file into the folder `traefik-on-service-fabric\Traefik\Scripts\`. If you have multiple certificates, this should be the one you wish Traefik to use to authenticate against your cluster's management endpoint. Ideally, this will be a `read-only` certificate.
 
@@ -39,7 +39,7 @@ If working against a local development cluster skip to step 5
 
 `cp .\certs\* ..\ApplicationPackageRoot\TraefikPkg\Code\certs`
 
-7. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file to make sure the certificate names match, the `clustermanagementurl` is correct and the `[servicefabric] provider is uncommented
+7. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric] provider tag is uncommented.
 
 ```toml
 ################################################################
@@ -85,28 +85,28 @@ To learn more about the Traefik model of Frontends and Backends [see their docum
 
 ## Simple Configuration
 
-The simplest way to expose a service is using `ApplicationParameters`. 
+The simplest way to expose a Service Fabric service via Traefik is by using Service Fabric's `ApplicationParameters`. 
 
-Add a default parameter to your `ApplicationPackageRoot/ApplicationManifest.xml` as follows:
+1. Add a default parameter to your `ApplicationPackageRoot/ApplicationManifest.xml`
 
-```
+```xml
 <Parameter Name="TraefikPublish" DefaultValue="" />
 ```
 
-Under the `ApplicationParameters/Local.5Node.xml` (this name will vary depend on your deployment configuration) add the corresponding parameter with the services you which to publish listed as a comma separated list. For example:
+2. Under the `..\ApplicationParameters\` directory you will find a few files. Depending on your intended target `local` or `cloud` you'll need to edit the appropriate file i.e. `Local.5node.xml`. Add a parameter with the name `TraefikPublish` and the value as a comma seperated list of service names you wish to expose.
 
-```
+```xml
  <Parameter Name="TraefikPublish" Value="fabric:/GettingStartedApplication/WebService" />
 ```
 
 ## Advanced Configuration
 
-Traefik has a nice set of features, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
+Traefik has a more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
 
-These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures Traefik. Here are some [examples of normal TOML files](https://docs.traefik.io/user-guide/examples/).
+These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/).
 
-The template file is deployed and managed by Service Fabric using configuration packages. Users can update their configuration file and then use the script `/Traefik/Scripts/Update-Config.ps1` to publish configuration-only updates.
+When configuring your template files, please note that the Service Fabric Traefik provider will dynamically inject your service endpoints as backend servers. This means you can add configuration such as load balancing rules which will be applied to the injected servers at runtime.
 
-There is more detail on using the templates [here](Docs/CustomTemplates.MD) and [samples](Docs/SampleTemplates)
+More detail on using the templates can be found [here](Docs/CustomTemplates.MD), along with [samples here](Docs/SampleTemplates).
 
 
