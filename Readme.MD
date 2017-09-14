@@ -77,7 +77,7 @@ apiversion = "3.0"
 
 ![img](Docs/Images/traefikonsf.png)
 
-14. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+14. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...\traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
 
 ## How does it work?
 
