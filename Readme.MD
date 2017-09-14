@@ -29,9 +29,9 @@ If you're working against a local development cluster skip to step 7.
 4. Set your execution policy to unrestricted to allow the scripts to run
 `Set-ExectuionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`
 
-5. Create a passphrase file with restricted permissions for the .Pfx passphrase
+5. Create a passphrase ANSI text file with suitable permissions and write the .Pfx passphrase to it.
 
-5. Run the `Create-Certs.ps1` script
+5. Run the `Create-Certs.ps1` script. Please refer to the [cofiguration section](#Certificates) for more details.
 
 `.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt>`
 
@@ -109,4 +109,10 @@ When configuring your template files, please note that the Service Fabric Traefi
 
 More detail on using the templates can be found [here](Docs/CustomTemplates.MD), along with [samples here](Docs/SampleTemplates).
 
+## Certificates
+The `Create-Certs.ps1` script is intended to help bootstrap a simple Traefik deployment to a Service Fabric cluster. However, it is not intended as a production-grade solution for securing Traefik.
+I recommend you read the [documentation](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cluster-security-update-certs-azure) on managing certificates in Azure Service Fabric.
 
+The Traefik provider only requires `Read-Only` access to the Service Fabric API and thus you should ideally use a `Read-Only` certificate.
+
+The `Create-Certs.ps1` script also generates a root CA certificate signed with the same client key. If you require this to be signed by an offical CA or a different key then please comment out this section of the script and manually obtain the root CA certificate.
