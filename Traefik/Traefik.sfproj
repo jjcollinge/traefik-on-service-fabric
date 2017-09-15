@@ -25,6 +25,7 @@
     <None Include="PublishProfiles\Local.1Node.xml" />
     <None Include="PublishProfiles\Local.5Node.xml" />
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
+    <None Include="Scripts\Get-TraefikBinary.ps1" />
     <None Include="Scripts\Update-Config.ps1" />
   </ItemGroup>
   <ItemGroup>

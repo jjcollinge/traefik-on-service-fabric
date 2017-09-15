@@ -8,7 +8,7 @@ param([string]$url="https://github.com/jjcollinge/traefik-on-service-fabric/rele
 Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
 Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
 
-$outfile = $PSScriptRoot+"/../ApplicationPackageRoot/TraefikPkg/Code/Traefik.exe"
+$outfile = $PSScriptRoot+"/../ApplicationPackageRoot/TraefikPkg/Code/traefik.exe"
 
 # Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
 
