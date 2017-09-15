@@ -10,7 +10,7 @@ Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
 
 $outfile = $PSScriptRoot+"/../ApplicationPackageRoot/TraefikPkg/Code/traefik.exe"
 
-# Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
+Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
 
 Write-Host "Download complete" -foregroundcolor Green
 

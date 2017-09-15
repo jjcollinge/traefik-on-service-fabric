@@ -22,7 +22,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 2. Download the Traefik Binary into the solution by running the following powershell script.
 
-    `./Traefik/Scripts/Get-TraefikBinary.ps1`
+    `./traefik-on-service-fabric/Traefik/Scripts/Get-TraefikBinary.ps1`
 
     This will use the build from this repositories release. To override this specify a `-url` argument with the URL of a Traefik windows binary.
 
