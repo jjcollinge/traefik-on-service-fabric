@@ -1,13 +1,12 @@
-# Using Custom Templates for complex Traefik Configuration
+# Custom Traefik Templates
+In order to really harnass the power and flexibility of Traefik, you'll want to consider authoring your own custom TOML template file. Rather than defining which services should be exposed using an `ApplicationParameter` as you would for simple routing, you can customise the TOML template file `config.toml.tmpl` for much more complex configuration.
 
 ## Introduction to Templating Language
-
 Traefik leverages golang's built in [templating language](https://golang.org/pkg/text/template/). It may look scary, but don't be put off! It's relatively simple to get your head around and you don't need to know how to program in golang to use it.
 
 A good resource to start with is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines). Helm is an application package management system for [Kubernetes](https://kubernetes.io/) which also uses golang templating and their docs are great! 
 
 ## How to access cluster information in your template?
-
 In the templates you have access to an `Object` with information about the services, application, partitions, instance and replicas available in your Service Fabric cluster. This can be accessed using the keyword `.Services`.
 
 A simple example of this is `{{len .Services}}`. This will print the current number of services hosted in the Service Fabric cluster.
@@ -28,50 +27,133 @@ This prints the `Parition.ID` and the `ServiceKind` (Stateful or Stateless) for 
 
 Skip to the full examples to see how this language can be used to build out a complete TOML configuration.
 
+## Service Fabric Helper Function
+We have provided a set of helper function which make it easier to access data about your Service Fabric cluster when building your own template. There functions mostly operate on an object like a Service, Instance or Replica.
 
-## ServiceFabric Helper Function
+### List of available functions
 
-These are functions which can be used to make things easier when building your template. Mostly they operate on an object like a Service, Instance or Replica.
+***
 
-### Functions 
+### `isPrimary`
+**Inputs:**
+- Replica (`.Services[].Partitions[].Replicas)
 
-- `isPrimary`: Returns `true` if the Replica has a `ReplicaRole` of "Primary"
-    - Takes a Replica (.Services[].Paritions[].Replicas)
-    - Example: `{{ if isPrimary $replica}}`
+**Outputs:**
+- Boolean
 
+**Description:** 
 
-- `isHealthy`: Returns `true` if the Replica/Instance has a `ReplicaStatus == Ready` and `HealthState != Error`
-    - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: `{{ if isHealthy $replica}}`
+Indicates whether a given `Replica` has a `ReplicaRole` of "Primary"
 
+**Example:**
 
-- `hasHTTPEndpoint`: Returns `true` if the Replica/Instance has an HTTP based endpoint defined in SF
-    - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: `{{ if hasHTTPEndpoint $replica}}`
+`{{ if isPrimary $replica}}`
 
+***
+### `isHealthy`
+**Inputs:**
+- Replica (`.Services[].Partitions[].Replicas)
 
-- `getDefaultEndpoint`: Returns the `url` of the default endpoint for a Replica from it's `ServiceManifest`. If multiple endpoints exists, it picks the first one.
-    - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: `{{ print (getDefaultEndpoint $replica)}}`
+**Outputs:**
+- Boolean
 
+**Description:** 
 
-- `getNamedEndpoint`: Returns the `url` of named endpoint for Replica
-    - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances) and an endpoint name.
-    - Example: `{{ print (getDefaultEndpoint $replica "NodeJsEndpoint")}}`
+Indicates whether a given `Replica` has a `ReplicaStatus` of "Ready" and a `HealthState` not equal to "Error"
 
+**Example:**
 
-- `getApplicationParameter`: Returns the value of an Application Parameter from the `ApplicationManifest`
-    - Takes an Application (.Services[].ApplicationData) and a Parameter Name
-    - Example: `{{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}`
+`{{ if isHealthy $replica}}`
 
+***
+### `hasHTTPEndpoint`
+**Inputs:**
+- Replica (`.Services[].Partitions[].Replicas`)
+- OR Instance (`.Services[].Paritions[].Instances`)
 
-- `doesAppParamContain`: Returns `true` if the Application Parameter containers the specified string
-    - Takes an Application (.Services[].ApplicationData), a Parameter Name and the string to search for in the parameter value
-    - Example: Checks if "SomeAppParam" contains the service name `{{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}`
+**Outputs:**
+- Boolean
 
+**Description:** 
+
+Indicates whether a given `Replica` or `Instance` has an available HTTP based endpoint defined in Service Fabric.
+
+**Example:**
+
+`{{ if hasHTTPEndpoint $replica}}`
+
+***
+### `getDefaultEndpoint`
+**Inputs:**
+- Replica (`.Services[].Partitions[].Replicas`)
+- OR Instance (`.Services[].Paritions[].Instances`)
+
+**Outputs:**
+- String
+
+**Description:** 
+
+Selects the default endpoint URL for a `Replica` or `Instance`. If multiple endpoints exist for a given `Replica` or `Instance`, it will select the first.
+
+**Example:**
+
+`{{ print (getDefaultEndpoint $replica)}}`
+
+***
+### `getNamedEndpoint`
+**Inputs:**
+- Replica (`.Services[].Partitions[].Replicas`)
+- OR Instance (`.Services[].Paritions[].Instances`)
+- String
+
+**Outputs:**
+- String
+
+**Description:** 
+
+Selects a named endpoint URL for a `Replica` or `Instance`.
+
+**Example:**
+
+`{{ print (getNamedEndpoint $replica "NodeJsEndpoint")}}`
+
+***
+### `getApplicationParameter`
+**Inputs:**
+- Application (`.Services[].ApplicationData`)
+- String
+
+**Outputs:**
+- String
+
+**Description:** 
+
+Attempts to find a parameter with the provided name in the `ApplicationManifest` and returns the associated value.
+
+**Example:**
+
+`{{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}`
+
+***
+### `doesAppParamContain`
+**Inputs:**
+- Application (`.Services[].ApplicationData`)
+- String
+
+**Outputs:**
+- Boolean
+
+**Description:** 
+
+Attempts to find a parameter with the provided name in the `ApplicationManifest` and returns whether or not it exists.
+
+**Example:**
+
+`{{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}`
+
+***
 
 ## Example 1: Manual Frontend Definition
-
 In this example we're going to publish out several Service Fabric services to appear as a single API externally. 
 
 This example assumes our cluster has the following deployed:
