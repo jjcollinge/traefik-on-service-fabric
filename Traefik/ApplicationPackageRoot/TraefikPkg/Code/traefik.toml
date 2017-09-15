@@ -83,16 +83,16 @@ address = ":8080"
 [servicefabric]
 
 # Service Fabric Management Endpoint
-clustermanagementurl = "http://localhost:19080"
+clustermanagementurl = "https://localhost:19080"
 
 # Service Fabric Management Endpoint API Version
 apiversion = "3.0"
 
 # Client certifcate file path
-# clientcertfilepath = "certs/mycert.crt"
+clientcertfilepath = "certs/clientcert.crt"
 
 # Client certifcate key file path
-# clientcertkeyfilepath = "certs/mycert.key"
+clientcertkeyfilepath = "certs/clientcert.key"
 
 # CA certifcate file path
-# cacertfilepath = "certs/cacert.cer"
+cacertfilepath = "certs/cacert.cer"

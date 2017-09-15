@@ -2,90 +2,93 @@
 
 ## Introduction to Templating Language
 
-Traefik uses golangs [templating language](https://golang.org/pkg/text/template/) but don't be put off it's relatively simple to get your head around and you don't need to know how to program in golang. 
+Traefik leverages golang's built in [templating language](https://golang.org/pkg/text/template/). It may look scary, but don't be put off! It's relatively simple to get your head around and you don't need to know how to program in golang to use it.
 
-A good resource to start which is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines), Helm is an app packaing system for Kubernetes which also uses golang templating and they're docs are great. 
+A good resource to start with is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines). Helm is an application package management system for [Kubernetes](https://kubernetes.io/) which also uses golang templating and their docs are great! 
 
-## TemplateObject or How to access cluster information?
+## How to access cluster information in your template?
 
-In the templates you have access to an Object with information about the services, application, partitions, instance and replicas available in the cluster. 
+In the templates you have access to an `Object` with information about the services, application, partitions, instance and replicas available in your Service Fabric cluster. This can be accessed using the keyword `.Services`.
 
-This can be accessed using the keyword ".Services", for a useless but simple example "Number of Services:{{ len .Services}}" would print the number of services in the cluster. 
+A simple example of this is `{{len .Services}}`. This will print the current number of services hosted in the Service Fabric cluster.
 
-Child properties can be accessed with dot notation, for example (Tip: Range is a Foreach loop, roughly):
+Child properties can be accessed using dot notation, for example (Tip: `Range` is roughly equivalent to a `foreach` loop in other languages):
 
 ```
-
 {{range $service := .Services}}
     {{range $patitions := $service.Patitions}}
         {{ print $partition.ID $partition.ServiceKind}}
     {{end}}
 {{end}}
-
 ```
 
-This outputs the parition ID and it's kind, Stateful or Stateless, for each service in the cluster. Skip to the full examples to see how this is used to build the TOML config. 
+This prints the `Parition.ID` and the `ServiceKind` (Stateful or Stateless) for each service in the cluster.
+Skip to the full examples to see how this language can be used to build out a complete TOML configuration.
 
 ## ServiceFabric Helper Function
 
-These are little functions which can be used to make things easier. Mostly they operate on an object like a Service, Instance or Replica. 
+These are functions which can be used to make things easier when building your template. Mostly they operate on an object like a Service, Instance or Replica.
 
-Functions 
+### Functions 
 
-- isPrimary: Returns true if the Replica has a ReplicaRole of Primary
+- `isPrimary`: Returns `true` if the Replica has a `ReplicaRole` of "Primary"
     - Takes a Replica (.Services[].Paritions[].Replicas)
-    - Example: {{ if isPrimary $replica}}
+    - Example: `{{ if isPrimary $replica}}`
 
 
-- isHealthy: Returns true if the Replica/Instance has a ReplicaStatus == Ready and HealthState != Error
+- `isHealthy`: Returns `true` if the Replica/Instance has a `ReplicaStatus == Ready` and `HealthState != Error`
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ if isHealthy $replica}}
+    - Example: `{{ if isHealthy $replica}}`
 
 
-- hasHTTPEndpoint: Returns true if the Replica/Instance has an HTTP based endpoint defined in SF
+- `hasHTTPEndpoint`: Returns `true` if the Replica/Instance has an HTTP based endpoint defined in SF
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ if hasHTTPEndpoint $replica}}
+    - Example: `{{ if hasHTTPEndpoint $replica}}`
 
 
-- getDefaultEndpoint: Returns url of endpoint for Replica from Service Manifest, if multiple picks first endpoint.
+- `getDefaultEndpoint`: Returns the `url` of the default endpoint for a Replica from it's `ServiceManifest`. If multiple endpoints exists, it picks the first one.
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances)
-    - Example: {{ print (getDefaultEndpoint $replica)}}
+    - Example: `{{ print (getDefaultEndpoint $replica)}}`
 
 
-- getNamedEndpoint: Returns url of named endpoint for Replica
+- `getNamedEndpoint`: Returns the `url` of named endpoint for Replica
     - Takes a Replica or Instance (.Services[].Paritions[].Replicas or .Services[].Paritions[].Instances) and an endpoint name.
-    - Example: {{ print (getDefaultEndpoint $replica "NodeJsEndpoint")}}
+    - Example: `{{ print (getDefaultEndpoint $replica "NodeJsEndpoint")}}`
 
 
-- getApplicationParameter: Returns the value of an Application Parameter from the ApplicationManifest
+- `getApplicationParameter`: Returns the value of an Application Parameter from the `ApplicationManifest`
     - Takes an Application (.Services[].ApplicationData) and a Parameter Name
-    - Example: {{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}
+    - Example: `{{ if eq (getApplicationParameter $service.ApplicationData "SomeParamHere") "TheValueItCouldEqual" }}`
 
 
-- doesAppParamContain: Returns true if the Application Parameter containers the specified string
+- `doesAppParamContain`: Returns `true` if the Application Parameter containers the specified string
     - Takes an Application (.Services[].ApplicationData), a Parameter Name and the string to search for in the parameter value
-    - Example: Checks if "SomeAppParam" contains the service name {{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}
+    - Example: Checks if "SomeAppParam" contains the service name `{{if doesAppParamContain $service.ApplicationData "SomeAppParam" $service.Name}}`
 
 
 ## Example 1: Manual Frontend Definition
 
 In this example we're going to publish out several Service Fabric services to appear as a single API externally. 
 
-Assuming our cluster has the following:
+This example assumes our cluster has the following deployed:
 
-Application:
+Application(s):
 
     - Shopping
 
-Stateless Services:
+Stateless Service(s):
 
     - Checkout (fabric:/Shopping/Checkout)
     - View (fabric:/Shopping/View)
     - Search (fabric:/Shopping/Search)
 
-In the API exposed we'll remap the services as follows:
-     http://cluster/basket -> fabric:/Shopping/Checkout as http://hostingnode/ (stripping the /basket)
-     http://cluster/shop -> fabric:/Shopping/View as http://hostingnode/shop (keeping /shop)
+In our API exposed via Traefik we'll map the service addresses as follows:
+
+Service Fabric name | External endpoint | Internal endpoint |
+| --- | --- | --- |
+| fabric:/Shopping/Checkout | http://{clusterfqdn}/basket | http://{hostipport}/ |
+| fabric:/Shopping/View | http://{clusterfqdn}/shop | http://{hostipport}/shop
+
 
 ```
 
