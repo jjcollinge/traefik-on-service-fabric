@@ -20,68 +20,75 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
     
     `git clone https://github.com/jjcollinge/traefik-on-service-fabric.git`
 
-2. Open the `Traefik.sln` file in Visual Studio
+2. Download the Traefik Binary into the solution by running the following powershell script.
 
-If you're working against a local development cluster skip to step 9.
+    `./traefik-on-service-fabric/Traefik/Scripts/Get-TraefikBinary.ps1`
 
-3. Download or copy your clusters `.pfx` certificate file into the folder `traefik-on-service-fabric\Traefik\Scripts\`. If you have multiple certificates, this should be the one you wish Traefik to use to authenticate against your cluster's management endpoint. Ideally, this will be a `read-only` certificate.
+    This will use the build from this repositories release. To override this specify a `-url` argument with the URL of a Traefik windows binary.
 
-4. Set your execution policy to unrestricted to allow the scripts to run
-`Set-ExectuionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`
+3. Open the `Traefik.sln` file in Visual Studio
 
-5. Create a passphrase ANSI text file with suitable permissions and write the `*.pfx` passphrase to it.
+    **If you're working against a local development cluster skip to step 9.**
 
-6. Please read the [Certificates section](#certificates) before running the `Create-Certs.ps1` script... ok read it? Run the `Create-Certs.ps1` script.
+4. Download or copy your clusters `.pfx` certificate file into the folder `traefik-on-service-fabric\Traefik\Scripts\`. If you have multiple certificates, this should be the one you wish Traefik to use to authenticate against your cluster's management endpoint. Ideally, this will be a `read-only` certificate.
 
-`.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt> -CASubject "/C=GB/ST=England/L=London/O=Jon/CN=www.example.com"`
+5. Set your execution policy to unrestricted to allow the scripts to run
 
-7. Copy your generated certificate to the folder Traefik expects to find them in `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\certs`
+    `Set-ExectuionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser`
 
-`cp .\certs\* ..\ApplicationPackageRoot\TraefikPkg\Code\certs\`
+6. Create a passphrase ANSI text file with suitable permissions and write the `*.pfx` passphrase to it.
 
-8. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
+7. Please read the [Certificates section](#certificates) before running the `Create-Certs.ps1` script... ok read it? Run the `Create-Certs.ps1` script.
 
-9. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric]` provider tag is uncommented too.
+    `.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt> -CASubject "/C=GB/ST=England/L=London/O=Jon/CN=www.example.com"`
 
-```toml
-################################################################
-# Service Fabric provider
-################################################################
+8. Copy your generated certificate to the folder Traefik expects to find them in        `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\certs`
 
-# Enable Service Fabric configuration backend
-[servicefabric]
+    `cp .\certs\* ..\ApplicationPackageRoot\TraefikPkg\Code\certs\`
 
-# Service Fabric Management Endpoint
-clustermanagementurl = "http://localhost:19080"
+9. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
 
-# Service Fabric Management Endpoint API Version
-apiversion = "3.0"
+10. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric]` provider tag is uncommented too.
 
-# Client certifcate file path
-# clientcertfilepath = "certs/mycert.crt"
+    ```toml
+    ################################################################
+    # Service Fabric provider
+    ################################################################
 
-# Client certifcate key file path
-# clientcertkeyfilepath = "certs/mycert.key"
+    # Enable Service Fabric configuration backend
+    [servicefabric]
 
-# CA certifcate file path
-# cacertfilepath = "certs/cacert.cer"
-```
+    # Service Fabric Management Endpoint
+    clustermanagementurl = "http://localhost:19080"
 
-10. You now have a choice (Yikes!). See [simple configuration](#simple-configuration) or [advanced configuration](#advanced-configuration) to review your options.
+    # Service Fabric Management Endpoint API Version
+    apiversion = "3.0"
 
-11. Once configured, you can simply publish Traefik from Visual Studio like any other Service Fabric service.
+    # Client certifcate file path
+    # clientcertfilepath = "certs/mycert.crt"
 
-12. To be able to route traffic through the Traefik API and see the dashboard, you'll need to open up and map the relevant ports on the Azure Load Balancer. These ports default to 80 (API) and 8080 (Dashboard) and can be configured in the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` file and the TraefikPkg's `ServiceManifest.xml`.
+    # Client certifcate key file path
+    # clientcertkeyfilepath = "certs/mycert.key"
 
-13. Once the deployment is complete, you should be able to visit the Traefik dashboard at http[s]://[clusterfqdn]:8080.
+    # CA certifcate file path
+    # cacertfilepath = "certs/cacert.cer"
+    ```
 
-![img](Docs/Images/traefikonsf.png)
+11. You now have a choice (Yikes!). See [simple configuration](#simple-configuration) or [advanced configuration](#advanced-configuration) to review your options.
 
-14. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...\traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+12. Once configured, you can simply publish Traefik from Visual Studio like any other Service Fabric service.
 
-```
-.\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
-```
+13. To be able to route traffic through the Traefik API and see the dashboard, you'll need to open up and map the relevant ports on the Azure Load Balancer. These ports default to 80 (API) and 8080 (Dashboard) and can be configured in the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` file and the TraefikPkg's `ServiceManifest.xml`.
+
+14. Once the deployment is complete, you should be able to visit the Traefik dashboard at http[s]://[clusterfqdn]:8080.
+
+    ![img](Docs/Images/traefikonsf.png)
+
+15. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...\traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+
+    ```
+    .\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
+    ```
 
 ## How does it work?
 
