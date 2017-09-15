@@ -1,0 +1,489 @@
+{
+    "Services": [
+      {
+        "HasPersistedState": false,
+        "HealthState": "Ok",
+        "Id": "GettingStartedApplication/GuestExeBackendService",
+        "IsServiceGroup": false,
+        "ManifestVersion": "1.0.0",
+        "Name": "fabric:/GettingStartedApplication/GuestExeBackendService",
+        "ServiceKind": "Stateless",
+        "ServiceStatus": "Active",
+        "TypeName": "GuestExeBackendServiceType",
+        "HasHTTPEndpoint": false,
+        "IsHealthy": false,
+        "Application": {
+          "HealthState": "Ok",
+          "Id": "GettingStartedApplication",
+          "Name": "fabric:/GettingStartedApplication",
+          "Parameters": [
+            {
+              "Key": "GuestExeBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatelessBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "TraefikPublish",
+              "Value": "fabric:/GettingStartedApplication/WebService"
+            },
+            {
+              "Key": "WebService_InstanceCount",
+              "Value": "1"
+            }
+          ],
+          "Status": "Ready",
+          "TypeName": "GettingStartedApplicationType",
+          "TypeVersion": "1.0.0"
+        },
+        "Partitions": [
+          {
+            "CurrentConfigurationEpoch": {
+              "ConfigurationVersion": "",
+              "DataLossVersion": ""
+            },
+            "HealthState": "Ok",
+            "MinReplicaSetSize": 0,
+            "PartitionInformation": {
+              "HighKey": "",
+              "Id": "e481e2af-a8e4-420d-803b-25a08b9e8417",
+              "LowKey": "",
+              "ServicePartitionKind": "Singleton"
+            },
+            "PartitionStatus": "Ready",
+            "ServiceKind": "Stateless",
+            "TargetReplicaSetSize": 0,
+            "HasReplicas": false,
+            "Replicas": null,
+            "HasInstances": true,
+            "Instances": [
+              {
+                "Address": "{\"Endpoints\":{\"GuestExeBackendServiceTypeEndpoint\":\"http:\\/\\/localhost:8080\\/\"}}",
+                "HealthState": "Ok",
+                "LastInBuildDurationInSeconds": "0",
+                "NodeName": "_Node_0",
+                "ReplicaRole": "",
+                "ReplicaStatus": "Ready",
+                "ServiceKind": "Stateless",
+                "InstanceId": "131498585608430952"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "HasPersistedState": true,
+        "HealthState": "Ok",
+        "Id": "GettingStartedApplication/MyActorService",
+        "IsServiceGroup": false,
+        "ManifestVersion": "1.0.0",
+        "Name": "fabric:/GettingStartedApplication/MyActorService",
+        "ServiceKind": "Stateful",
+        "ServiceStatus": "Active",
+        "TypeName": "MyActorServiceType",
+        "HasHTTPEndpoint": false,
+        "IsHealthy": false,
+        "Application": {
+          "HealthState": "Ok",
+          "Id": "GettingStartedApplication",
+          "Name": "fabric:/GettingStartedApplication",
+          "Parameters": [
+            {
+              "Key": "GuestExeBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatelessBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "TraefikPublish",
+              "Value": "fabric:/GettingStartedApplication/WebService"
+            },
+            {
+              "Key": "WebService_InstanceCount",
+              "Value": "1"
+            }
+          ],
+          "Status": "Ready",
+          "TypeName": "GettingStartedApplicationType",
+          "TypeVersion": "1.0.0"
+        },
+        "Partitions": [
+          {
+            "CurrentConfigurationEpoch": {
+              "ConfigurationVersion": "17179869188",
+              "DataLossVersion": "131497931065143717"
+            },
+            "HealthState": "Ok",
+            "MinReplicaSetSize": 1,
+            "PartitionInformation": {
+              "HighKey": "9223372036854775807",
+              "Id": "d916e1b2-fc5b-4a8d-ad46-c7ce0967abe7",
+              "LowKey": "-9223372036854775808",
+              "ServicePartitionKind": "Int64Range"
+            },
+            "PartitionStatus": "Ready",
+            "ServiceKind": "Stateful",
+            "TargetReplicaSetSize": 1,
+            "HasReplicas": true,
+            "Replicas": [
+              {
+                "Address": "{\"Endpoints\":{\"\":\"localhost:30001+d916e1b2-fc5b-4a8d-ad46-c7ce0967abe7-131497931073744027\"}}",
+                "HealthState": "Ok",
+                "LastInBuildDurationInSeconds": "1",
+                "NodeName": "_Node_0",
+                "ReplicaRole": "Primary",
+                "ReplicaStatus": "Ready",
+                "ServiceKind": "Stateful",
+                "ReplicaId": "131497931073744027"
+              }
+            ],
+            "HasInstances": false,
+            "Instances": null
+          }
+        ]
+      },
+      {
+        "HasPersistedState": true,
+        "HealthState": "Ok",
+        "Id": "GettingStartedApplication/StatefulBackendService",
+        "IsServiceGroup": false,
+        "ManifestVersion": "1.0.0",
+        "Name": "fabric:/GettingStartedApplication/StatefulBackendService",
+        "ServiceKind": "Stateful",
+        "ServiceStatus": "Active",
+        "TypeName": "StatefulBackendServiceType",
+        "HasHTTPEndpoint": false,
+        "IsHealthy": false,
+        "Application": {
+          "HealthState": "Ok",
+          "Id": "GettingStartedApplication",
+          "Name": "fabric:/GettingStartedApplication",
+          "Parameters": [
+            {
+              "Key": "GuestExeBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatelessBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "TraefikPublish",
+              "Value": "fabric:/GettingStartedApplication/WebService"
+            },
+            {
+              "Key": "WebService_InstanceCount",
+              "Value": "1"
+            }
+          ],
+          "Status": "Ready",
+          "TypeName": "GettingStartedApplicationType",
+          "TypeVersion": "1.0.0"
+        },
+        "Partitions": [
+          {
+            "CurrentConfigurationEpoch": {
+              "ConfigurationVersion": "17179869188",
+              "DataLossVersion": "131497931065133487"
+            },
+            "HealthState": "Ok",
+            "MinReplicaSetSize": 1,
+            "PartitionInformation": {
+              "HighKey": "9223372036854775807",
+              "Id": "9772fce0-88d1-4548-9498-ea5f56acbb82",
+              "LowKey": "-9223372036854775808",
+              "ServicePartitionKind": "Int64Range"
+            },
+            "PartitionStatus": "Ready",
+            "ServiceKind": "Stateful",
+            "TargetReplicaSetSize": 1,
+            "HasReplicas": true,
+            "Replicas": [
+              {
+                "Address": "{\"Endpoints\":{\"\":\"http:\\/\\/localhost:54483\\/9772fce0-88d1-4548-9498-ea5f56acbb82\\/131497931073744027\\/73081c0f-276c-4333-be94-bc70c4c46041\"}}",
+                "HealthState": "Ok",
+                "LastInBuildDurationInSeconds": "2",
+                "NodeName": "_Node_0",
+                "ReplicaRole": "Primary",
+                "ReplicaStatus": "Ready",
+                "ServiceKind": "Stateful",
+                "ReplicaId": "131497931073744027"
+              }
+            ],
+            "HasInstances": false,
+            "Instances": null
+          }
+        ]
+      },
+      {
+        "HasPersistedState": false,
+        "HealthState": "Ok",
+        "Id": "GettingStartedApplication/StatelessBackendService",
+        "IsServiceGroup": false,
+        "ManifestVersion": "1.0.0",
+        "Name": "fabric:/GettingStartedApplication/StatelessBackendService",
+        "ServiceKind": "Stateless",
+        "ServiceStatus": "Active",
+        "TypeName": "StatelessBackendServiceType",
+        "HasHTTPEndpoint": false,
+        "IsHealthy": false,
+        "Application": {
+          "HealthState": "Ok",
+          "Id": "GettingStartedApplication",
+          "Name": "fabric:/GettingStartedApplication",
+          "Parameters": [
+            {
+              "Key": "GuestExeBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatelessBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "TraefikPublish",
+              "Value": "fabric:/GettingStartedApplication/WebService"
+            },
+            {
+              "Key": "WebService_InstanceCount",
+              "Value": "1"
+            }
+          ],
+          "Status": "Ready",
+          "TypeName": "GettingStartedApplicationType",
+          "TypeVersion": "1.0.0"
+        },
+        "Partitions": [
+          {
+            "CurrentConfigurationEpoch": {
+              "ConfigurationVersion": "",
+              "DataLossVersion": ""
+            },
+            "HealthState": "Ok",
+            "MinReplicaSetSize": 0,
+            "PartitionInformation": {
+              "HighKey": "",
+              "Id": "3e0b6efc-5b52-4f3b-b0c0-59746051f5b9",
+              "LowKey": "",
+              "ServicePartitionKind": "Singleton"
+            },
+            "PartitionStatus": "Ready",
+            "ServiceKind": "Stateless",
+            "TargetReplicaSetSize": 0,
+            "HasReplicas": false,
+            "Replicas": null,
+            "HasInstances": true,
+            "Instances": [
+              {
+                "Address": "{\"Endpoints\":{\"\":\"localhost:30004+3e0b6efc-5b52-4f3b-b0c0-59746051f5b9-131498585608435872\"}}",
+                "HealthState": "Ok",
+                "LastInBuildDurationInSeconds": "11",
+                "NodeName": "_Node_0",
+                "ReplicaRole": "",
+                "ReplicaStatus": "Ready",
+                "ServiceKind": "Stateless",
+                "InstanceId": "131498585608435872"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "HasPersistedState": false,
+        "HealthState": "Ok",
+        "Id": "GettingStartedApplication/WebService",
+        "IsServiceGroup": false,
+        "ManifestVersion": "1.0.0",
+        "Name": "fabric:/GettingStartedApplication/WebService",
+        "ServiceKind": "Stateless",
+        "ServiceStatus": "Active",
+        "TypeName": "WebServiceType",
+        "HasHTTPEndpoint": false,
+        "IsHealthy": false,
+        "Application": {
+          "HealthState": "Ok",
+          "Id": "GettingStartedApplication",
+          "Name": "fabric:/GettingStartedApplication",
+          "Parameters": [
+            {
+              "Key": "GuestExeBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "MyActorService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_MinReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_PartitionCount",
+              "Value": "1"
+            },
+            {
+              "Key": "StatefulBackendService_TargetReplicaSetSize",
+              "Value": "1"
+            },
+            {
+              "Key": "StatelessBackendService_InstanceCount",
+              "Value": "1"
+            },
+            {
+              "Key": "TraefikPublish",
+              "Value": "fabric:/GettingStartedApplication/WebService"
+            },
+            {
+              "Key": "WebService_InstanceCount",
+              "Value": "1"
+            }
+          ],
+          "Status": "Ready",
+          "TypeName": "GettingStartedApplicationType",
+          "TypeVersion": "1.0.0"
+        },
+        "Partitions": [
+          {
+            "CurrentConfigurationEpoch": {
+              "ConfigurationVersion": "",
+              "DataLossVersion": ""
+            },
+            "HealthState": "Ok",
+            "MinReplicaSetSize": 0,
+            "PartitionInformation": {
+              "HighKey": "",
+              "Id": "58d5c532-3253-4586-8e11-7053a3850554",
+              "LowKey": "",
+              "ServicePartitionKind": "Singleton"
+            },
+            "PartitionStatus": "Ready",
+            "ServiceKind": "Stateless",
+            "TargetReplicaSetSize": 0,
+            "HasReplicas": false,
+            "Replicas": null,
+            "HasInstances": true,
+            "Instances": [
+              {
+                "Address": "{\"Endpoints\":{\"\":\"http:\\/\\/localhost:30003\"}}",
+                "HealthState": "Ok",
+                "LastInBuildDurationInSeconds": "2",
+                "NodeName": "_Node_0",
+                "ReplicaRole": "",
+                "ReplicaStatus": "Ready",
+                "ServiceKind": "Stateless",
+                "InstanceId": "131498585608430952"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

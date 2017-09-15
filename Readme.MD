@@ -84,7 +84,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
     ![img](Docs/Images/traefikonsf.png)
 
-15. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `...\traefik.toml` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+15. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
 
     ```
     .\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1

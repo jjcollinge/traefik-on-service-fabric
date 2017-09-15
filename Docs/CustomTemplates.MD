@@ -23,7 +23,11 @@ Child properties can be accessed using dot notation, for example (Tip: `Range` i
 ```
 
 This prints the `Parition.ID` and the `ServiceKind` (Stateful or Stateless) for each service in the cluster.
+
+[This JSON document](./SampleTemplates/TemplateObject.json), taken from a cluster hosting the GettingStarted sample, shows the structure of the `.Services` object and available properties.
+
 Skip to the full examples to see how this language can be used to build out a complete TOML configuration.
+
 
 ## ServiceFabric Helper Function
 
