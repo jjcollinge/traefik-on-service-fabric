@@ -28,7 +28,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 3. Open the `Traefik.sln` file in Visual Studio
 
-    **If you're working against a local development cluster skip to step 9.**
+    **If you're working against a local development cluster skip to step 10.**
 
 4. Download or copy your clusters `.pfx` certificate file into the folder `traefik-on-service-fabric\Traefik\Scripts\`. If you have multiple certificates, this should be the one you wish Traefik to use to authenticate against your cluster's management endpoint. Ideally, this will be a `read-only` certificate.
 
