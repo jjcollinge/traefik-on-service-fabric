@@ -112,15 +112,16 @@ The simplest way to expose a Service Fabric service via Traefik is by using Serv
     ...
 </Parameters>
 ```
-3. To make sure the Service Fabric provider uses it's default configuration. Please remove any existing `toml.tmpl` file from the folder `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\`.
 
 ## Advanced Configuration
 
 Traefik has a more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
 
-These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/). To leverage your own TOML template file, simply create a file with the extension `.toml.tmpl` in the folder `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\`. Do this before you deploy Treafik for the first time, or use the `Update-Config.ps1` as shown in Step 14.
+These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/).
 
-When configuring your template files, please note that the Service Fabric Traefik provider will dynamically inject your service endpoints as backend servers. This means you can add configuration such as load balancing rules which will be applied to the injected servers at runtime.
+To customise your TOML template file, simply edit or replace the default TOML template file located at `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl`. Do this before you deploy Treafik for the first time, or use the `Update-Config.ps1` as shown in Step 14 to do an in-place config update.
+
+When writing your custom template files, please note that the Service Fabric Traefik provider will dynamically inject your service endpoints as backend servers. This means you can add configuration such as load balancing rules which will be applied to the injected servers at runtime.
 
 More detail on using the templates can be found [here](Docs/CustomTemplates.MD), along with [samples here](Docs/SampleTemplates).
 
