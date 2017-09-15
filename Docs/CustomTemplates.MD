@@ -2,29 +2,28 @@
 
 ## Introduction to Templating Language
 
-Traefik uses golang's [templating language](https://golang.org/pkg/text/template/). Don't be put off though, it's relatively simple to get your head around and you don't need to know how to program in golang to use it. 
+Traefik leverages golang's built in [templating language](https://golang.org/pkg/text/template/). It may look scary, but don't be put off! It's relatively simple to get your head around and you don't need to know how to program in golang to use it.
 
-A good resource to start which is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines), Helm is an app packaging system for [Kubernetes](https://kubernetes.io/) which also uses golang templating and their docs are great. 
+A good resource to start with is the [Helm docs](https://docs.helm.sh/chart_template_guide/#template-functions-and-pipelines). Helm is an application package management system for [Kubernetes](https://kubernetes.io/) which also uses golang templating and their docs are great! 
 
-## TemplateObject or How to access cluster information?
+## How to access cluster information in your template?
 
-In the templates you have access to an Object with information about the services, application, partitions, instance and replicas available in the Service Fabric cluster. 
+In the templates you have access to an `Object` with information about the services, application, partitions, instance and replicas available in your Service Fabric cluster. This can be accessed using the keyword `.Services`.
 
-This can be accessed using the keyword ".Services", for a useless but simple example "Number of Services:{{ len .Services}}" would print the number of services in the cluster. 
+A simple example of this is `{{len .Services}}`. This will print the current number of services hosted in the Service Fabric cluster.
 
-Child properties can be accessed with dot notation, for example (Tip: `Range` is roughly equivalent to a `foreach` loop in other languages):
+Child properties can be accessed using dot notation, for example (Tip: `Range` is roughly equivalent to a `foreach` loop in other languages):
 
 ```
-
 {{range $service := .Services}}
     {{range $patitions := $service.Patitions}}
         {{ print $partition.ID $partition.ServiceKind}}
     {{end}}
 {{end}}
-
 ```
 
-This outputs the `Parition ID` and the `Service Kind` (Stateful or Stateless) for each service in the cluster. Skip to the full examples to see how this is used to build the TOML config.
+This prints the `Parition.ID` and the `ServiceKind` (Stateful or Stateless) for each service in the cluster.
+Skip to the full examples to see how this language can be used to build out a complete TOML configuration.
 
 ## ServiceFabric Helper Function
 
@@ -71,21 +70,25 @@ These are functions which can be used to make things easier when building your t
 
 In this example we're going to publish out several Service Fabric services to appear as a single API externally. 
 
-Assuming our cluster has the following:
+This example assumes our cluster has the following deployed:
 
-Application:
+Application(s):
 
     - Shopping
 
-Stateless Services:
+Stateless Service(s):
 
     - Checkout (fabric:/Shopping/Checkout)
     - View (fabric:/Shopping/View)
     - Search (fabric:/Shopping/Search)
 
-In the exposed API we'll remap the services as follows:
-     http://cluster/basket -> fabric:/Shopping/Checkout as http://hostingnode/ (stripping the /basket)
-     http://cluster/shop -> fabric:/Shopping/View as http://hostingnode/shop (keeping /shop)
+In our API exposed via Traefik we'll map the service addresses as follows:
+
+Service Fabric name | External endpoint | Internal endpoint |
+| --- | --- | --- |
+| fabric:/Shopping/Checkout | http://{clusterfqdn}/basket | http://{hostipport}/ |
+| fabric:/Shopping/View | http://{clusterfqdn}/shop | http://{hostipport}/shop
+
 
 ```
 
