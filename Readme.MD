@@ -84,7 +84,11 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
     ![img](Docs/Images/traefikonsf.png)
 
-15. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
+    You should see a single frontend and a number of backends configured.
+
+15. Open your web browser and hit the address http://[clusterfqdn]/GettingStartedApplication/WebService. You should be routed through to the 'Service Fabric Sample Application' home page. You'll notice that the index.html page loads fine but fails to bring in the accompanying assets (.js and .css files). This is because the web application is unaware that it must route it's requests via the Prefix '/GettingStartedApplication/WebService' and is trying to access them at the root path '/'. Traefik passes the stripped route through to the backend web server in the `X-Forwarded-Prefix` header. The web server must use this header to append the prefix to any URLs that will be invoked from the browser to access other assets on the web server.
+
+16. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
 
     ```
     .\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
@@ -126,7 +130,7 @@ Traefik has a more advanced features than simple routing, including [Rate limiti
 
 These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/).
 
-To customise your TOML template file, simply edit or replace the default TOML template file located at `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl`. Do this before you deploy Treafik for the first time, or use the `Update-Config.ps1` as shown in Step 14 to do an in-place config update.
+To customise your TOML template file, simply edit or replace the default TOML template file located at `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl`. Do this before you deploy Treafik for the first time, or use the `Update-Config.ps1` as shown in Step 15 to do an in-place config update.
 
 When writing your custom template files, please note that the Service Fabric Traefik provider will dynamically inject your service endpoints as backend servers. This means you can add configuration such as load balancing rules which will be applied to the injected servers at runtime.
 

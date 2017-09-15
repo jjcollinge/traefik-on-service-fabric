@@ -14,6 +14,15 @@ Indicated whether or not this is a secure cluster connection
 .PARAMETER PfxCertThumbprint 
 Certificate thumbprint for secure cluster connection
 
+.PARAMETER HealthCheckStableDurationSec 
+Number of seconds to wait to check upgrade domain is healthy after upgrade
+
+.PARAMETER UpgradeDomainTimeoutSec 
+Number of seconds to wait for a upgrade domain to timeout
+
+.PARAMETER UpgradeTimeout 
+Number of seconds to wait for an entire upgrade to timeout
+
 .EXAMPLE
 PS> Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
 
@@ -35,7 +44,16 @@ param (
    $PfxCertThumbprint,
    [Parameter(Mandatory=$true)]
    [boolean]
-   $SecureCluster
+   $SecureCluster,
+   [Parameter(Mandatory=$false)]
+   [int16]
+   $HealthCheckStableDurationSec = 60,
+   [Parameter(Mandatory=$false)]
+   [int16]  
+   $UpgradeDomainTimeoutSec = 1200,
+   [Parameter(Mandatory=$false)]
+   [int16]  
+   $UpgradeTimeout = 3000
 )
 
 filter timestamp {"$(Get-Date -Format G): $_"}
@@ -142,11 +160,12 @@ Try {
 
 	Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $NewAppPkg -ApplicationPackagePathInImageStore $NewAppPkgName
 	Register-ServiceFabricApplicationType -ApplicationPathInImageStore $NewAppPkgName
-	Start-ServiceFabricApplicationUpgrade -ApplicationName $TraefikApplicationName -ApplicationTypeVersion $NewAppTypeVer -HealthCheckStableDurationSec 60 -UpgradeDomainTimeoutSec 1200 -UpgradeTimeout 3000 -FailureAction Rollback -Monitored
+	Start-ServiceFabricApplicationUpgrade -ApplicationName $TraefikApplicationName -ApplicationTypeVersion $NewAppTypeVer -HealthCheckStableDurationSec $HealthCheckStableDurationSec -UpgradeDomainTimeoutSec $UpgradeDomainTimeoutSec -UpgradeTimeout $UpgradeTimeout -FailureAction Rollback -Monitored
 }
 Catch
 {
-	Write-Error "Error occured updating configuration files - reverting to original files" | timestamp
+	Write-Error "Error occured updating configuration files: $_.Execption.Message"
+	Write-Output "Reverting changes..." | timestamp
 
 	# Revert to original state by overwritting modified files with original backups
 	Copy-Item $CurrentServiceManifestBackupPath $CurrentServiceManifestPath
@@ -159,4 +178,6 @@ Finally
 	# Remove backup files
 	Remove-Item -Force $CurrentServiceManifestBackupPath
 	Remove-Item -Force $CurrentApplicationManifestBackupPath
+
+	Write-Output "Done." | timestamp
 }
