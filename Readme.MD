@@ -142,6 +142,6 @@ I recommend you read the [documentation](https://docs.microsoft.com/en-us/azure/
 
 The Traefik provider only requires `Read-Only` access to the Service Fabric API and thus you should ideally use a `Read-Only` certificate.
 
-The `Create-Certs.ps1` script also generates a root CA certificate signed with the same client key. If you require this to be signed by an offical CA or a different key then please comment out this section of the script and manually obtain the root CA certificate. For more information on setting up your own CA please refer to this [documentation]( as well as this documentation on [OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/introduction.html).
+The `Create-Certs.ps1` script also generates a root CA certificate signed with the same client key. If you require this to be signed by an offical CA or a different key then please comment out this section of the script and manually obtain the root CA certificate. For more information on setting up your own CA please refer to this documentation on [OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/introduction.html).
 
 **Warning:** The script currently has to unencrypt the .key file as the Traefik provider doesn't support encrypted client key files. We are working to rectify this. In the meantime, please be careful where you store the unencrypted .key file.
