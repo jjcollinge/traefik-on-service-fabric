@@ -20,25 +20,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ApplicationPackageRoot\ApplicationManifest.xml" />
-    <None Include="ApplicationParameters\Cloud.xml" />
     <None Include="ApplicationParameters\Local.1Node.xml" />
     <None Include="ApplicationParameters\Local.5Node.xml" />
-    <None Include="PublishProfiles\Cloud.xml" />
     <None Include="PublishProfiles\Local.1Node.xml" />
     <None Include="PublishProfiles\Local.5Node.xml" />
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
     <None Include="Scripts\Update-Config.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\cacert.cer" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.crt" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\mycert.key" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.exe" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\setup.bat" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\frontends.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\Settings.xml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ApplicationPackageRoot\TraefikPkg\Code\certs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>
