@@ -1,3 +1,11 @@
+# Disclaimer
+
+This project is under heavy development and deployment instructions are likely to be outdated during the current sprint, lasting until late November. 
+
+## Related Repositories
+- Traefik fork for provider development: https://github.com/lawrencegripper/traefik/
+- Go SF Management SDK: https://github.com/jjcollinge/servicefabric
+
 # Running Traefik on Service Fabric
 
 # What is Traefik?
