@@ -1,3 +1,4 @@
+
 # Disclaimer
 
 This project is under heavy development and deployment instructions are likely to be outdated during the current sprint, lasting until late November. 
@@ -5,6 +6,7 @@ This project is under heavy development and deployment instructions are likely t
 ## Related Repositories
 - Traefik fork for provider development: https://github.com/lawrencegripper/traefik/
 - Go SF Management SDK: https://github.com/jjcollinge/servicefabric
+- sfctl for property management: https://github.com/Azure/service-fabric-cli/pull/53
 
 # Running Traefik on Service Fabric
 
