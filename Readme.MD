@@ -108,28 +108,50 @@ Traefik is hosted as a Service Fabric Guest Executable. Traefik has a built in S
 
 To learn more about the Traefik model of Frontends and Backends [see their documentation](https://docs.traefik.io/basics/).
 
-## Simple Configuration
+## Simple Configuration [UPDATE IN PROGRESS]
 
-The simplest way to expose a Service Fabric service via Traefik is by using Service Fabric's `ApplicationParameters`. 
+The simplest way to expose a Service Fabric service via Traefik is by using Service Fabric's `Extension` element in your `ServiceManifest.xml`. 
 
-1. Add a default parameter to your `ApplicationPackageRoot/ApplicationManifest.xml`
+1. To expose our a service on the path `/testservice` add the `Extensions` section from below into your `ServiceManifest.xml`
 
 ```xml
-<Parameters>
-    ...
-    <Parameter Name="TraefikPublish" DefaultValue="" />
-    ...
-</Parameters>
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceManifest Name="WebServicePkg"
+                 Version="2.0.0"
+                 xmlns="http://schemas.microsoft.com/2011/01/fabric"
+                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ServiceTypes>
+    <!-- This is the name of your ServiceType. 
+         This name must match the string used in RegisterServiceType call in Program.cs. -->
+    <StatelessServiceType ServiceTypeName="WebServiceType">
+      <Extensions>
+          <Extension Name="Traefik">
+            <Labels xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
+              <Label Key="traefik.frontend.rule.default">PathPrefixStrip: /thing</Label>
+              <Label Key="traefik.expose">true</Label>
+              <Label Key="traefik.frontend.passHostHeader">true</Label>
+            </Labels>
+          </Extension>
+      </Extensions>
+    </StatelessServiceType>
+  </ServiceTypes>
+
 ```
 
-2. Under the `..\ApplicationParameters\` directory you will find a few files. Depending on your intended target `local` or `cloud` you'll need to edit the appropriate file i.e. `Local.5node.xml`. Add a parameter with the name `TraefikPublish` and the value as a comma seperated list of service names you wish to expose.
+2. You can override these at runtime using the Property Management API of the cluster. For example:
 
-```xml
-<Parameters>
-    ...
-    <Parameter Name="TraefikPublish" Value="fabric:/GettingStartedApplication/WebService" />
-    ...
-</Parameters>
+```
+curl -X PUT \
+  'http://localhost:19080/Names/GettingStartedApplication2/WebService/$/GetProperty?api-version=6.0&IncludeValues=true' \
+  -d '{
+  "PropertyName": "traefik.frontend.rule.default",
+  "Value": {
+    "Kind": "String",
+    "Data": "PathPrefixStrip: /testing"
+  },
+  "CustomTypeId": "LabelType"
+}'
 ```
 
 ## Advanced Configuration
