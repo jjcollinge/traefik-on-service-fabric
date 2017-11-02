@@ -154,6 +154,8 @@ curl -X PUT \
 }'
 ```
 
+The available labels are similar to those supported by the [Docker Provider](https://docs.traefik.io/configuration/backends/docker/). Review these for usage information, in future docs will be updated to detail SF specifics. 
+
 ## Advanced Configuration
 
 Traefik has a more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
