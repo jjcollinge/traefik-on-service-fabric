@@ -73,7 +73,7 @@ address = ":80"
 #
 # Required
 #
-address = ":8080"
+address = ":9000"
 
 ################################################################
 # Service Fabric provider
@@ -89,10 +89,10 @@ clustermanagementurl = "https://localhost:19080"
 apiversion = "3.0"
 
 # Client certifcate file path
-clientcertfilepath = "certs/clientcert.crt"
+clientcertfilepath = "certs/client.crt"
 
 # Client certifcate key file path
-clientcertkeyfilepath = "certs/clientcert.key"
+clientcertkeyfilepath = "certs/client.key"
 
-# CA certifcate file path
-cacertfilepath = "certs/cacert.cer"
+# Skip TLS verify
+InsecureSkipVerify=true

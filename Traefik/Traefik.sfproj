@@ -29,18 +29,14 @@
     <None Include="Scripts\Update-Config.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\cacert.cer" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert.crt" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert.key" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\clientcert_encrypted.key" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\client.crt" />
+    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\client.key" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.exe" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\Settings.xml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ApplicationPackageRoot\TraefikPkg\Code\certs\" />
+    <Content Include="PublishProfiles\example.Cloud.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

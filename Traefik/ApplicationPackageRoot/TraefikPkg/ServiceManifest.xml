@@ -32,7 +32,7 @@
            listen. Please note that if your service is partitioned, this port is shared with 
            replicas of different partitions that are placed in your code. -->
       <Endpoint Name="TraefikTypeEndpoint" UriScheme="http" Port="80" />
-      <Endpoint Name="TraefikTypeDashboardEndpoint" UriScheme="http" Port="8080" />
+      <Endpoint Name="TraefikTypeDashboardEndpoint" UriScheme="http" Port="9000" />
     </Endpoints>
   </Resources>
 </ServiceManifest>
