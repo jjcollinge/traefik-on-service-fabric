@@ -25,7 +25,7 @@ while($True)
     }
 
     # Print call status
-    echo "$body : $statusCode"
+    echo "$body : HTTP $statusCode"
 
     if($statusCode -eq 200)
     {

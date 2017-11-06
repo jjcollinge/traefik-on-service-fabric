@@ -9,8 +9,8 @@
  {
     $content = Get-Content $logFile
     $parts = $content.Split(',')
-    $timestamp = $parts[0] -replace "T" -replace "" 
-    $uri = $parts[1] -replace "U" -replace "" 
+    $timestamp = $parts[0] -replace "T:" -replace "" 
+    $uri = $parts[1] -replace "U:" -replace "" 
     $success = $parts[2] -replace "S:" -replace ""
     $fail = $parts[3] -replace "F:" -replace ""
 

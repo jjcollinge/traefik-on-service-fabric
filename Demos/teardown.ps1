@@ -1,6 +1,10 @@
 ﻿param (
     [bool]
-    $removeTraffic = $False
+    $removeTraefik = $False,
+    [bool]
+    $removeUpgrade = $True,
+    [bool]
+    $removeAppsV1 = $False
  )
 
 
@@ -15,6 +19,12 @@ $app2Package = 'apps\app1\v2.0.0'
 $app2AppType = 'NodeAppType'
 $app2ServiceName = 'WebService'
 $app2ServiceType = 'WebServicePkg'
+
+# Application3 package
+$app3Package = 'apps\app1\v3.0.0'
+$app3AppType = 'NodeAppType'
+$app3ServiceName = 'WebService'
+$app3ServiceType = 'WebServicePkg'
 
 # Traefik package
 $traefikPackage = 'traefik'
@@ -38,32 +48,43 @@ $customerBFabricName = "fabric:/CustomerB"
 $customerA2FabricName = "fabric:/CustomerA2"
 $customerAAppVersion2 = "2.0.0"
 
-$ErrorActionPreference = 'silentlycontinue'
+# Customer A Version 3
+$customerA3FabricName = "fabric:/CustomerA3"
+$customerAAppVersion3 = "3.0.0"
+
+$ErrorActionPreference = 'SilentlyContinue'
 
 Connect-ServiceFabricCluster -ConnectionEndpoint 'localhost:19000'
 
-# Remove all application instances
-Remove-ServiceFabricApplication -ApplicationName $customerAFabricName -Force
-Remove-ServiceFabricApplication -ApplicationName $customerBFabricName -Force
-Remove-ServiceFabricApplication -ApplicationName $customerA2FabricName -Force
-
-# Unregister all application types
-Unregister-ServiceFabricApplicationType -ApplicationTypeName $app1AppType -ApplicationTypeVersion $customerAAppVersion -Force
-Unregister-ServiceFabricApplicationType -ApplicationTypeName $app2AppType -ApplicationTypeVersion $customerAAppVersion2 -Force
-Unregister-ServiceFabricApplicationType -ApplicationTypeName $app2AppType -ApplicationTypeVersion $customerBAppVersion -Force
-
-# Remove all application packages
-Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $app1Package
-Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $app2Package
-
-if($removeTraffic -eq $True)
+# Remove v1 app
+if ($removeAppsV1)
 {
-    Remove-ServiceFabricApplication -ApplicationName $traefikFabricName -Force
-    Unregister-ServiceFabricApplicationType -ApplicationTypeName $traefikAppType -ApplicationTypeVersion "1.0.0" -Force
-    Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $traefikPackage
+    echo "Removing application V1"
+    Remove-ServiceFabricApplication -ApplicationName $customerAFabricName -Force
+    Remove-ServiceFabricApplication -ApplicationName $customerBFabricName -Force
+
+    Unregister-ServiceFabricApplicationType -ApplicationTypeName $app1AppType -ApplicationTypeVersion $customerAAppVersion -Force
+    Unregister-ServiceFabricApplicationType -ApplicationTypeName $app1AppType -ApplicationTypeVersion $customerBAppVersion -Force
+
+    Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $app1Package
 }
 
+# Always...
+
+# Remove v2
+echo "Removing application v2"
+Remove-ServiceFabricApplication -ApplicationName $customerA2FabricName -Force
+Unregister-ServiceFabricApplicationType -ApplicationTypeName $app2AppType -ApplicationTypeVersion $customerAAppVersion2 -Force
+Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $app2Package
+
+# Remove v3
+echo "Removing application v3"
+Remove-ServiceFabricApplication -ApplicationName $customerA3FabricName -Force
+Unregister-ServiceFabricApplicationType -ApplicationTypeName $app3AppType -ApplicationTypeVersion $customerAAppVersion3 -Force
+Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $app3Package
+
 # Clean up overrides
+echo "Deleting properties"
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA/WebService/$/GetProperty?api-version=6.0&PropertyName=traefik.frontend.priority' -Method Delete
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA/WebService/$/GetProperty?api-version=6.0&PropertyName=traefik.frontend.rule.default' -Method Delete
 
@@ -80,4 +101,14 @@ Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA3/WebService/$/Get
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA3/WebService/$/GetProperty?api-version=6.0&PropertyName=traefik.backend.group.weight' -Method Delete
 
 # Delete results
+echo "Deleting stats"
 rm .\results\*
+
+# Remove Traefik 
+if($removeTraffic -eq $True)
+{
+    echo "Deleting Traefik"
+    Remove-ServiceFabricApplication -ApplicationName $traefikFabricName -Force
+    Unregister-ServiceFabricApplicationType -ApplicationTypeName $traefikAppType -ApplicationTypeVersion "1.0.0" -Force
+    Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $traefikPackage
+}

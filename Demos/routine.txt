@@ -1,0 +1,79 @@
+﻿# Demo Script
+
+# Ensure your local cluster is running and ready.
+#
+# For a faster start, run the .\setup.ps1 script
+# before your start the demo and clear your screen.
+# This will deploy and register the applications so
+# that when you run it during the demo the setup
+# commands will silently fail quickly and your cluster
+# will be in the desired state to start the demo.
+#
+# To start the demo, execute:
+# .\run.ps1
+#
+# When prompted for input
+# >>> Setup Service Fabric cluster?:
+# Hit return
+#
+# Show Service Fabric explorer http://localhost:19080
+# Show Traefik dashboard http://localhost:9000
+#
+# Make sure the following backends have an address and
+# are ready to serve traffic before starting monitoring
+# fabric:/CustomerA/WebService
+# fabric:/CustomerB/WebService
+#
+# When prompted for input
+# >>> Start monitoring?:
+# Hit return
+#
+# Show the CustomerA and CustomerB monitoring
+# windows
+#
+# When prompted for input
+# >>> Trigger blue/green upgrade?:
+# Hit return
+#
+# Show Traefik dashbord, see:
+# fabric:/CustomerA2/WebService
+# mention priorities and show customerA monitoring
+# thread continues
+# Visit http://localhost:80/staging in the browser
+#
+# When prompted for input
+# >>> Swap  target?:
+# Hit return
+#
+# Show updated Traefik dashboard
+#
+# When prompted for input
+# >>> Trigger canary upgrade?:
+# Hit return
+#
+# Show updated Traefik dashboard
+# Show customerA monitoring to confirm V2 still active
+# 
+# When prompted for input
+# >>> Set v3 distribution to 25%?:
+# Hit return
+# Show customerA monitoring to confirm v3 25%
+#
+# When prompted for input
+# >>> Set v3 distribution to 50%?:
+# Hit return
+# Show customerA monitoring to confirm v3 50%
+#
+# When prompted for input
+# >>> Set v3 distribution to 100%?:
+# Hit return
+# Show customerA monitoring to confirm v3 100%
+#
+# When prompted for input
+# >>> Stop monitoring?:
+# Hit return
+# Show statistics summary
+#
+# Post demo, run the .\teardown.ps1 script to clean up
+# your cluster. Use the parameters to configure what
+# you wish to remove.

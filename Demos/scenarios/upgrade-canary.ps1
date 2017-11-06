@@ -22,7 +22,7 @@ Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA2/WebService/$/Get
   "CustomTypeId": "LabelType"
 }' > $null
 
-Read-Host "Set v3 distribution to 25%?"
+Read-Host ">>> Set v3 distribution to 25%?"
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA2/WebService/$/GetProperty?api-version=6.0&IncludeValues=true' -Method Put -Body '{
   "PropertyName": "traefik.backend.group.weight",
   "Value": {
@@ -41,7 +41,7 @@ Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA3/WebService/$/Get
   "CustomTypeId": "LabelType"
 }' > $null
 
-Read-Host "Set v3 distribution to 50%?"
+Read-Host ">>> Set v3 distribution to 50%?"
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA2/WebService/$/GetProperty?api-version=6.0&IncludeValues=true' -Method Put -Body '{
   "PropertyName": "traefik.backend.group.weight",
   "Value": {
@@ -60,7 +60,7 @@ Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA3/WebService/$/Get
   "CustomTypeId": "LabelType"
 }' > $null
 
-Read-Host "Set v3 distribution to 100%?"
+Read-Host ">>> Set v3 distribution to 100%?"
 Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA2/WebService/$/GetProperty?api-version=6.0&IncludeValues=true' -Method Put -Body '{
   "PropertyName": "traefik.backend.group.weight",
   "Value": {
