@@ -35,7 +35,7 @@ Invoke-WebRequest -Uri 'http://localhost:19080/Names/CustomerA2/WebService/$/Get
   "PropertyName": "traefik.frontend.rule.default",
   "Value": {
     "Kind": "String",
-    "Data": "/customerA"
+    "Data": "PathPrefixStrip: /customerA"
   },
   "CustomTypeId": "LabelType"
 }'
