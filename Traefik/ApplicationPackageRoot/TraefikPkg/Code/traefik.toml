@@ -89,10 +89,10 @@ clustermanagementurl = "https://localhost:19080"
 apiversion = "3.0"
 
 # Client certifcate file path
-clientcertfilepath = "certs/client.crt"
+clientcertfilepath = "certs/clientkey.cer"
 
 # Client certifcate key file path
-clientcertkeyfilepath = "certs/client.key"
+clientcertkeyfilepath = "certs/clientkey.key"
 
 # Skip TLS verify
 InsecureSkipVerify=true
