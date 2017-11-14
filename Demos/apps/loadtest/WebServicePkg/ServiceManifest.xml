@@ -5,7 +5,9 @@
       <Extensions>
           <Extension Name="Traefik">
             <Labels xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-              <Label Key="traefik.frontend.rule.default">PathPrefixStrip: /v1</Label>
+              <Label Key="traefik.frontend.rule.default">PathPrefixStrip: /bignode</Label>
+              <Label Key="traefik.frontend.priority">10</Label>
+              <Label Key="traefik.backend.group.name">bignode</Label>              
               <Label Key="traefik.expose">true</Label>
             </Labels>
           </Extension>
@@ -23,7 +25,7 @@
       </EntryPoint>
       <EnvironmentVariables>
         <EnvironmentVariable Name="NODE_PORT" Value="[Port]"/>
-        <EnvironmentVariable Name="RES_STRING" Value="Hello World"/>
+        <EnvironmentVariable Name="RES_STRING" Value="[Response]"/>
       </EnvironmentVariables>
    </CodePackage>
    <Resources>
