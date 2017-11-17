@@ -1,3 +1,5 @@
+ENDPOINT_TO_TEST=$1
+
 #Traefik install
 sfctl application upload --path ./Traefik/ApplicationPackageRoot/
 sfctl application provision --application-type-build-path ApplicationPackageRoot
@@ -12,5 +14,6 @@ do
    sfctl application create --app-type NodeAppType --app-version 1.0.0 --parameters "{\"PORT\":\"25$i\", \"RESPONSE\":\"25$i\"}" --app-name fabric:/node25$i ) &
 done
 
-
 #Run load test
+docker run --rm -it williamyeh/wrk -c 100 -t6 -d15m $ENDPOINT_TO_TEST
+docker run --rm -it williamyeh/wrk -c 100 -t6 -d15m $ENDPOINT_TO_TEST/large
