@@ -30,11 +30,11 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
     
     `git clone https://github.com/jjcollinge/traefik-on-service-fabric.git`
 
-2. Download the Traefik Binary into the solution by running the following powershell script.
+2. Download the Traefik binary into the solution by running the following powershell script.
 
     `./traefik-on-service-fabric/Traefik/Scripts/Get-TraefikBinary.ps1`
 
-    This will use the build from this repositories release. To override this specify a `-url` argument with the URL of a Traefik windows binary.
+    This will use the build from this repository's releases. To override the download url, specify a `-url` parameter to the script with the URL of the Traefik windows binary you wish to download.
 
 3. Open the `Traefik.sln` file in Visual Studio
 
@@ -50,7 +50,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 7. Please read the [Certificates section](#certificates) before running the `Create-Certs.ps1` script... ok read it? Run the `Create-Certs.ps1` script.
 
-    `.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt> -CASubject "/C=GB/ST=England/L=London/O=Jon/CN=www.example.com"`
+    `.\Create-Certs.ps1 -PfxCertFilePath <myclustercert.pfx> -PfxPassphraseFilePath <mypassphrase.txt>`
 
 8. Copy your generated certificate to the folder Traefik expects to find them in        `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\certs`
 
@@ -58,7 +58,7 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 9. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
 
-10. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` configuration file. If you're using a secure cluster, uncomment the 3 certificate parameters and make sure they point to the file names we generated earlier. Finally, ensure the `clustermanagementurl` is correct and that the `[servicefabric]` provider tag is uncommented too.
+10. Edit the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` global configuration file. If you're using a secure cluster, uncomment the TLS configuration section and make sure you provide paths to your client certificate files. Finally, ensure the `clustermanagementurl` is set to the HTTP management endpoint for your Service Fabric cluster.
 
     ```toml
     ################################################################
@@ -79,9 +79,9 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
     # Optional
     #
     # [serviceFabric.tls]
-    #   ca = "/etc/ssl/ca.crt"
-    #   cert = "/etc/ssl/servicefabric.crt"
-    #   key = "/etc/ssl/servicefabric.key"
+    #   ca = "certs/ca.crt"
+    #   cert = "certs/servicefabric.crt"
+    #   key = "certs/servicefabric.key"
     #   insecureskipverify = true
     ```
 
@@ -89,21 +89,18 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
 
 12. Once configured, you can simply publish Traefik from Visual Studio like any other Service Fabric service.
 
-13. To be able to route traffic through the Traefik API and see the dashboard, you'll need to open up and map the relevant ports on the Azure Load Balancer. These ports default to 80 (API) and 8080 (Dashboard) and can be configured in the `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` file and the TraefikPkg's `ServiceManifest.xml`.
+13. To be able to route traffic through the Traefik API and see the dashboard, you'll need to open up and map the relevant ports on the Azure Load Balancer. These ports default to 80 (API) and 9000 (Dashboard) and can be configured in `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in the corresponding `ServiceManifest.xml`.
 
-14. Once the deployment is complete, you should be able to visit the Traefik dashboard at http[s]://[clusterfqdn]:8080.
+14. Once the deployment is complete, you should be able to visit the Traefik dashboard at http[s]://[clusterfqdn]:9000.
 
     ![img](Docs/Images/traefikonsf.png)
 
-    You should see a single frontend and a number of backends configured.
+    You should see your frontends' and backends' configuration.
 
-15. Open your web browser and hit the address http://[clusterfqdn]/GettingStartedApplication/WebService. You should be routed through to the 'Service Fabric Sample Application' home page. You'll notice that the index.html page loads fine but fails to bring in the accompanying assets (.js and .css files). This is because the web application is unaware that it must route it's requests via the Prefix '/GettingStartedApplication/WebService' and is trying to access them at the root path '/'. Traefik passes the stripped route through to the backend web server in the `X-Forwarded-Prefix` header. The web server must use this header to append the prefix to any URLs that will be invoked from the browser to access other assets on the web server.
+15. If you exposed a web service, you should now be able to route to it using your desired configuration i.e. a label of PathPrefix: /testservice will be available on http://[clusterfqdn]/testservice
 
-16. Now that you have a Traefik instance up and running, you can simply update the config by changing either the `ApplicationParameters` or `traefik-on-service-fabric\Traefik\ApplicationPackageRoot\TraefikPkg\Config\config.toml.tmpl` and then running the `traefik-on-service-fabric\Traefik\Scripts\Update-Config.ps1`. This will patch your configuration files (`ApplicationManifest.xml` and `ServiceManifest.xml`), create a config-only Service Fabric application package and kick off a rolling update.
-
-    ```
-    .\Update-Config.ps1 -ServiceFabricConnectionEndpoint $clusterfqdn:19000 -PfxCertThumbprint $Thumbprint -SecureCluster 1
-    ```
+!!note!!
+Web applications that require linked static assets (.js, .css, image files) will fail to render when routed to via certain Traefik frontends. This is because the path on which the client is trying to grab those assets is relative to the web server serving the page which does not respect Traefik's routing rules. To fix this, Traefik passes the stripped path through to the backend web server in the the `X-Forwarded-Prefix` header. The web server must use this header to prepend to any URLs that will be invoked from the client.
 
 ## How does it work?
 
@@ -113,9 +110,9 @@ To learn more about the Traefik model of Frontends and Backends [see their docum
 
 ## Simple Configuration [UPDATE IN PROGRESS]
 
-The simplest way to expose a Service Fabric service via Traefik is by using Service Fabric's `Extension` element in your `ServiceManifest.xml`. 
+The simplest way to expose a Service Fabric web service via Traefik is by using Service Fabric's `Extension` element in your `ServiceManifest.xml`. 
 
-1. To expose our a service on the path `/testservice` add the `Extensions` section from below into your `ServiceManifest.xml`
+1. To expose a service on the path `/testservice`, simply add the `Extensions` section from below into your web service's `ServiceManifest.xml`
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -131,7 +128,7 @@ The simplest way to expose a Service Fabric service via Traefik is by using Serv
       <Extensions>
           <Extension Name="Traefik">
             <Labels xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-              <Label Key="traefik.frontend.rule.default">PathPrefixStrip: /thing</Label>
+              <Label Key="traefik.frontend.rule.default">PathPrefixStrip: /testservice</Label>
               <Label Key="traefik.expose">true</Label>
               <Label Key="traefik.frontend.passHostHeader">true</Label>
             </Labels>
@@ -142,7 +139,7 @@ The simplest way to expose a Service Fabric service via Traefik is by using Serv
 
 ```
 
-2. You can override these at runtime using the Property Management API of the cluster. For example:
+2. You can then override these extension properties at runtime using [Service Fabric's Property Management API](https://docs.microsoft.com/en-us/rest/api/servicefabric/sfclient-index-property-management). For example:
 
 ```
 curl -X PUT \
@@ -151,17 +148,19 @@ curl -X PUT \
   "PropertyName": "traefik.frontend.rule.default",
   "Value": {
     "Kind": "String",
-    "Data": "PathPrefixStrip: /testing"
+    "Data": "PathPrefixStrip: /staging"
   },
   "CustomTypeId": "LabelType"
 }'
 ```
 
-The available labels are similar to those supported by the [Docker Provider](https://docs.traefik.io/configuration/backends/docker/). Review these for usage information, in future docs will be updated to detail SF specifics. 
+The available labels are similar to those supported by the [Docker Provider](https://docs.traefik.io/configuration/backends/docker/). Review these for usage information, in future docs will be updated to detail SF specifics.
+
+We plan to make interacting with the Service Fabric Property Management API available via a future release of [sfctl](https://github.com/Azure/service-fabric-cli).
 
 ## Advanced Configuration
 
-Traefik has a more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
+Traefik has more advanced features than simple routing, including [Rate limiting](https://docs.traefik.io/basics/#backends) and [Circuit breakers](https://docs.traefik.io/basics/#backends) for backends and [Modifiers](https://docs.traefik.io/basics/#frontends) and [Matchers](https://docs.traefik.io/basics/#matchers) for frontends.
 
 These can all be used and customised when deploying on Service Fabric through a configuration template file. The template file is used to generate a TOML file which configures the Traefik instance. Here are some [examples of Traefik TOML files](https://docs.traefik.io/user-guide/examples/).
 
@@ -176,7 +175,5 @@ The `Create-Certs.ps1` script is intended to help bootstrap a simple Traefik dep
 I recommend you read the [documentation](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cluster-security-update-certs-azure) on managing certificates in Azure Service Fabric.
 
 The Traefik provider only requires `Read-Only` access to the Service Fabric API and thus you should ideally use a `Read-Only` certificate.
-
-The `Create-Certs.ps1` script also generates a root CA certificate signed with the same client key. If you require this to be signed by an offical CA or a different key then please comment out this section of the script and manually obtain the root CA certificate. For more information on setting up your own CA please refer to this documentation on [OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/introduction.html).
 
 **Warning:** The script currently has to unencrypt the .key file as the Traefik provider doesn't support encrypted client key files. We are working to rectify this. In the meantime, please be careful where you store the unencrypted .key file.
