@@ -97,11 +97,11 @@ clustermanagementurl = "https://localhost:19080"
 # Service Fabric Management Endpoint API Version
 apiversion = "3.0"
 
-# Client certifcate file path
-clientcertfilepath = "certs/clientkey.cer"
-
-# Client certifcate key file path
-clientcertkeyfilepath = "certs/clientkey.key"
-
-# Skip TLS verify
-InsecureSkipVerify=true
+# Enable TLS connection.
+#
+# Optional
+#
+[serviceFabric.tls]
+   cert = "certs/clientkey.cer"
+   key = "certs/clientkey.key"
+   insecureskipverify = true
