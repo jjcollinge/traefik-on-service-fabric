@@ -3,7 +3,7 @@
 # Overwride URL to upgrade versions to new Binary
 # 
 
-param([string]$url="https://github.com/jjcollinge/traefik-on-service-fabric/releases/download/v0.01/traefik.exe")
+param([string]$url="https://github.com/jjcollinge/traefik-on-service-fabric/releases/download/v0.0.5/traefik.exe")
 
 Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
 Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
