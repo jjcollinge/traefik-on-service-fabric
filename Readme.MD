@@ -74,14 +74,15 @@ Once you have a Service Fabric cluster up and running, let's deploy a sample app
     # Service Fabric Management Endpoint API Version
     apiversion = "3.0"
 
-    # Client certifcate file path
-    # clientcertfilepath = "certs/mycert.crt"
-
-    # Client certifcate key file path
-    # clientcertkeyfilepath = "certs/mycert.key"
-
-    # CA certifcate file path
-    # cacertfilepath = "certs/cacert.cer"
+    # Enable TLS connection.
+    #
+    # Optional
+    #
+    # [serviceFabric.tls]
+    #   ca = "/etc/ssl/ca.crt"
+    #   cert = "/etc/ssl/servicefabric.crt"
+    #   key = "/etc/ssl/servicefabric.key"
+    #   insecureskipverify = true
     ```
 
 11. You now have a choice (Yikes!). See [simple configuration](#simple-configuration) or [advanced configuration](#advanced-configuration) to review your options.
