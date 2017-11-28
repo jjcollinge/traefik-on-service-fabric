@@ -20,7 +20,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 ## Prerequisites
 - Visual Studio 2015 or greater with Service Fabric tooling.
 - OpenSSL for Windows
-> These are prerequisites are for following the instructions and are not required for running Træfik on Service Fabric
+> These prerequisites are for following the instructions and are not required for running Træfik on Service Fabric
 
 ## Instructions
 1. Clone this repository to your local machine.
