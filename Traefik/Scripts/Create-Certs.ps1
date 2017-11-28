@@ -53,7 +53,6 @@ function BuildOutputPath ([String]$fileName, [String]$fileExtension) {
     return $OutputPath
 }
 
-
 ############################
 # Test Prerequisites
 ############################
@@ -109,6 +108,4 @@ else
 
 Write-Host "All generated files have been placed within the directory: $OutputCertDir"
 Write-Host "To use these files with Traefik, move them to ..\ApplicationPackageRoot\TraefikPkg\Code\certs"
-Write-Host "Ensure your traefik.toml has the correct paths for the parameters"
-Write-Host " - clientcertfilepath"
-Write-Host " - clientcertkeyfilepath"
+Write-Host "Ensure your traefik.toml has the correct serviceFabric.tls configuration set."

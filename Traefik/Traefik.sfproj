@@ -36,7 +36,6 @@
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
     <Content Include="packages.config" />
-    <Content Include="PublishProfiles\example.Cloud.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>
