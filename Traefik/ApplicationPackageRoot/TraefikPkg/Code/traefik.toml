@@ -36,8 +36,10 @@ defaultEntryPoints = ["http", "https"]
 # Optional
 # Default:
 [entryPoints]
-[entryPoints.http]
+[entryPoints.traefik]
 address = ":80"
+[entryPoints.http]
+address = ":8080"
 
 # Enable access logs
 # By default it will write to stdout and produce logs in the textual
@@ -63,17 +65,33 @@ address = ":80"
 # format = "common"
 
 ################################################################
-# Web configuration backend
+# API definition
 ################################################################
 
-# Enable web configuration backend
-[web]
+[api]
+  # Name of the related entry point
+  #
+  # Optional
+  # Default: "traefik"
+  #
+  entryPoint = "traefik"
 
-# Web administration port
-#
-# Required
-#
-address = ":9000"
+  # Enabled Dashboard
+  #
+  # Optional
+  # Default: true
+  #
+  dashboard = true
+
+  # Enable debug mode.
+  # This will install HTTP handlers to expose Go expvars under /debug/vars and
+  # pprof profiling data under /debug/pprof.
+  # Additionally, the log level will be set to DEBUG.
+  #
+  # Optional
+  # Default: false
+  #
+  debug = true
 
 ################################################################
 # Service Fabric provider
@@ -93,6 +111,6 @@ apiversion = "3.0"
 # Optional
 #
 [serviceFabric.tls]
-   cert = "certs/client.crt"
-   key = "certs/client.key"
+   cert = "certs/servicefabric.crt"
+   key = "certs/servicefabric.key"
    insecureskipverify = true
