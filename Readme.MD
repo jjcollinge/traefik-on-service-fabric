@@ -20,7 +20,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 ## Prerequisites
 - Visual Studio 2015 or greater with Service Fabric tooling.
 - OpenSSL for Windows
-> These prerequisites are for following the instructions and are not required for running Træfik on Service Fabric
+> These prerequisites are for following the instructions and are not required for running Træfik on Service Fabric.
 
 ## Instructions
 1. Clone this repository to your local machine.
@@ -31,13 +31,13 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
     `./$REPO_ROOT/Traefik/Scripts/Get-TraefikBinary.ps1`
 
-    > This script will use a specific build from this repository's release list. To override the build's download URL, specify the `-url` parameter to the script.
+    > This script will use a specific build from this repository's release list. To override the build's download URL, provide the `-url` parameter to the script.
 
 3. Open the `Traefik.sln` file in Visual Studio
 
     **If you're working against a local development cluster or don't require a secure cluster, skip to step 7.**
 
-4. Træfik must authenticate to the Service Fabric management API. Currently, you can only do this using PEM formatted a client certificate. If you only have a `.pfx` certificate you will need to convert it using the following commands. 
+4. Træfik must authenticate to the Service Fabric management API. Currently, you can only do this using a PEM formatted client certificate. If you only have a `.pfx` certificate you will need to convert it using the following commands:
     
     * Extract the private key from the `.pfx` file
 
@@ -47,51 +47,51 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
         `openssl pkcs12 -in $pfxCertFilePath -clcerts -nokeys -out "clientCertOutputDir\servicefabric.crt" -passin pass:$certPass`
     
-    > Træfik only requires `Read-Only` access to the Service Fabric API and thus you should use a `Read-Only` certificate.
+    > Træfik *only* requires read-only access to the Service Fabric API and thus you should use a `Read-Only` certificate.
 
 5. Copy your generated certificate files to the `Code\certs` folder Træfik expects to find them in.
 
     `cp $clientCertOutputDir\* $REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\certs`
 
-6. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `$REPO_ROOT\Traefik\ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates local on disk and select `Add`.
+6. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `$REPO_ROOT\Traefik\ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates on local disk and select `Add`.
 
-7. Open `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml`  in a text editor. If you're using a secure cluster, ensure the TLS configuration section is uncommented and make sure the provided certificate paths are correct.
+7. Open `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` in a text editor. If you're using a secure cluster, ensure the TLS configuration section is uncommented and make sure the provided certificate paths are correct.
 
 > The `clustermanagementurl` setting is relative to where Træfik is running. If Træfik is running inside the cluster on every node, the `clustermanagementurl` should be left as `http://localhost:19080`, if however, Træfik is running externally to the cluster, an accessible endpoint should be provided.
 
-    ```toml
-    ################################################################
-    # Service Fabric provider
-    ################################################################
+```toml
+################################################################
+# Service Fabric provider
+################################################################
 
-    # Enable Service Fabric configuration backend
-    [servicefabric]
+# Enable Service Fabric configuration backend
+[servicefabric]
 
-    # Service Fabric Management Endpoint
-    clustermanagementurl = "http://localhost:19080"
+# Service Fabric Management Endpoint
+clustermanagementurl = "http://localhost:19080"
 
-    # Service Fabric Management Endpoint API Version
-    apiversion = "3.0"
+# Service Fabric Management Endpoint API Version
+apiversion = "3.0"
 
-    # Enable TLS connection.
-    #
-    # Optional
-    #
-    # [serviceFabric.tls]
-    #   cert = "certs/servicefabric.crt"
-    #   key = "certs/servicefabric.key"
-    #   insecureskipverify = true
-    ```
+# Enable TLS connection.
+#
+# Optional
+#
+# [serviceFabric.tls]
+#   cert = "certs/servicefabric.crt"
+#   key = "certs/servicefabric.key"
+#   insecureskipverify = true
+```
 
-8. You can now simply publish Træfik from Visual Studio like any other Service Fabric service. Right click on the project, select `Publish` and follow the publication wizard. 
+8. You can now simply publish Træfik from Visual Studio like any other Service Fabric application. Right click on the project, select `Publish` and follow the publication wizard. 
 
-9. To be able to ingress external requests via Træfik you'll need to open up and map the relevant ports on your public load balancer. For clusters on Azure, this will be your Azure Load Balancer. The default ports are; `tcp/80` (proxy) and `tcp/8080` (API) but can be configured in `$REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml`.
+9. To be able to ingress external requests via Træfik you'll need to open up and map the relevant ports on your public load balancer. For clusters on Azure, this will be your Azure Load Balancer. The default ports are; `tcp/80` (proxy) and `tcp/8080` (API) but these can be configured in `$REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml`.
 
 10. Once the load balancer has been configured to route traffic on the required ports, you should be able to visit the Træfik dashboard at http[s]://[clusterfqdn]:8080 if you have it enabled.
 
     ![img](Docs/Images/traefikonsf.png)
 
-> If you're cluster does not have any applications deployed, you will see an empty dashboard. **NOTE:** The dashboard will not render in various versions of Internet Explorer.
+> If your cluster does not have any applications deployed, you will see an empty dashboard. **NOTE:** The dashboard will not render in various versions of Internet Explorer.
 
 # Exposing a Service Fabric Application
 Træfik uses the concept of **labels** to configure how services are exposed.
@@ -116,9 +116,9 @@ In order to assign labels for your service, you can add `Extensions` to your ser
 ```
 
 ## Dynamically updating Service labels
-Once you've deployed your Service with some initial labels, you may need to change the way Træfik is routing requests without redeploying. You can overwrite and add new labels to a named service using Service Fabric's Property Management API. Træfik will then pick up these new/updated labels and reconfigure itself.
+Once you've deployed your service with some default labels, you may need to change the way Træfik is routing requests without redeploying. You can overwrite and add new labels to a named service using Service Fabric's Property Management API. Træfik will then pick up these new/updated labels and reconfigure itself.
 
-### Setting a label dynamically using Curl
+### Setting a label dynamically using curl
 ```bash
 curl -X PUT \
   'http://localhost:19080/Names/GettingStartedApplication2/WebService/$/GetProperty?api-version=6.0&IncludeValues=true' \
@@ -145,7 +145,8 @@ The current list of available labels is documented [here](https://master--traefi
 ## Custom Templates
 > For advanced users only
 
-If the default configuration the Service Fabric Træfik provider builds is not sufficient for your needs, you can write a custom template that the provider will use instead. Documentation on how to write a custom template is available [here](https://docs.traefik.io/configuration/commons/#override-default-configuration-template).
+If the default configuration the Service Fabric Træfik provider builds is not sufficient for your needs, you can write a custom template that the provider will use instead. Documentation on how to write a custom template is available [here](https://docs.traefik.io/configuration/commons/#override-default-configuration-template). Your custom template will need to be added to either your application's `Code` or `Config` folders and the relative URL provided in the traefik.toml configuration.
+The functions available for you to use in your custom template are documented [here](https://github.com/jjcollinge/traefik-on-service-fabric/blob/master/Docs/CustomTemplates.MD)
 
 ## How does Træfik on Service Fabric work?
 Træfik is hosted as a Service Fabric Guest Executable. Træfik has a built-in Service Fabric [provider](https://github.com/containous/traefik/tree/master/provider) which will query the Service Fabric management API to discover what services are currently being hosted in the cluster (referred to as `backends`). The provider then maps routing rules (known as `frontends`) to these service instances (referred to as `backends`). Ingress flows in via `entrypoints` (http, https, etc.), `frontends` are then applied to [match](https://docs.traefik.io/basics/#matchers) and [modify](https://docs.traefik.io/basics/#modifiers) each requests before load balancing across the associated `backends`. The provider will take into account the `Health` and `Status` of each of the services to ensure requests are only routed to healthy service instances.
