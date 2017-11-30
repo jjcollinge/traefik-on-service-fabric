@@ -36,9 +36,9 @@ defaultEntryPoints = ["http", "https"]
 # Optional
 # Default:
 [entryPoints]
-[entryPoints.traefik]
-address = ":80"
 [entryPoints.http]
+address = ":80"
+[entryPoints.traefik]
 address = ":8080"
 
 # Enable access logs
@@ -101,7 +101,7 @@ address = ":8080"
 [servicefabric]
 
 # Service Fabric Management Endpoint
-clustermanagementurl = "https://localhost:19080"
+clustermanagementurl = "http://localhost:19080"
 
 # Service Fabric Management Endpoint API Version
 apiversion = "3.0"
@@ -110,7 +110,7 @@ apiversion = "3.0"
 #
 # Optional
 #
-[serviceFabric.tls]
-   cert = "certs/servicefabric.crt"
-   key = "certs/servicefabric.key"
-   insecureskipverify = true
+#[serviceFabric.tls]
+#   cert = "certs/servicefabric.crt"
+#   key = "certs/servicefabric.key"
+#   insecureskipverify = true

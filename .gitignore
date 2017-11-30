@@ -303,3 +303,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+*.DS_Store
+/Traefik/ApplicationPackageRoot/Watchdog/Code/traefik-appinsights-watchdog.exe
+*.cer
+*.key
+*.pem

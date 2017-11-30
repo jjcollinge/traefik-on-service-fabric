@@ -28,15 +28,18 @@
     <None Include="Scripts\Get-TraefikBinary.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\client.crt" />
-    <Content Include="ApplicationPackageRoot\TraefikPkg\Code\certs\client.key" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.exe" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Config\Settings.xml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\Code\traefik.toml" />
     <Content Include="ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml" />
+    <Content Include="ApplicationPackageRoot\Watchdog\Code\traefik-appinsights-watchdog.exe" />
+    <Content Include="ApplicationPackageRoot\Watchdog\ServiceManifest.xml" />
     <Content Include="ApplicationParameters\Cloud.xml" />
     <Content Include="packages.config" />
     <Content Include="PublishProfiles\Cloud.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ApplicationPackageRoot\TraefikPkg\Code\certs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>
