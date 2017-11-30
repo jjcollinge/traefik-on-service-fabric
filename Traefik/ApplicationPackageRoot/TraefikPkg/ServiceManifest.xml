@@ -15,8 +15,8 @@
         <Arguments>--configfile=traefik.toml</Arguments>
         <WorkingFolder>CodePackage</WorkingFolder>
         <!-- Uncomment to log console output (both stdout and stderr) to one of the
-             service's working directories. -->
-        <ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />
+             service's working directories.
+        <ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" /> -->
       </ExeHost>
     </EntryPoint>
   </CodePackage>
