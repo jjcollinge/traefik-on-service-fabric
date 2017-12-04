@@ -1,10 +1,5 @@
 ENDPOINT_TO_TEST=$1
 
-#Traefik install
-sfctl application upload --path ./Traefik/ApplicationPackageRoot/
-sfctl application provision --application-type-build-path ApplicationPackageRoot
-sfctl application create --app-type TraefikType --app-version 1.0.0 --app-name fabric:/traefik
-
 #Spin up some node apps
 sfctl application upload --path ./Demos/apps/loadtest
 sfctl application provision --application-type-build-path loadtest

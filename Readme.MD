@@ -57,7 +57,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
 7. Open `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` in a text editor. If you're using a secure cluster, ensure the TLS configuration section is uncommented and make sure the provided certificate paths are correct.
 
-> The `clustermanagementurl` setting is relative to where Træfik is running. If Træfik is running inside the cluster on every node, the `clustermanagementurl` should be left as `http://localhost:19080`, if however, Træfik is running externally to the cluster, an accessible endpoint should be provided.
+> The `clustermanagementurl` setting is relative to where Træfik is running. If Træfik is running inside the cluster on every node, the `clustermanagementurl` should be left as `https://localhost:19080`, if however, Træfik is running externally to the cluster, an accessible endpoint should be provided. If you are testing Traefik against an unsecure cluster, like your local onebox cluster, use `http://localhost:19080`
 
 ```toml
 ################################################################
@@ -68,7 +68,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 [servicefabric]
 
 # Service Fabric Management Endpoint
-clustermanagementurl = "http://localhost:19080"
+clustermanagementurl = "https://localhost:19080"
 
 # Service Fabric Management Endpoint API Version
 apiversion = "3.0"
@@ -83,11 +83,13 @@ apiversion = "3.0"
 #   insecureskipverify = true
 ```
 
-8. You can now simply publish Træfik from Visual Studio like any other Service Fabric application. Right click on the project, select `Publish` and follow the publication wizard. 
+8. *Optional*  You can choose to enable a watchdog service which will report stats and check Traefik is routing by sending synthetic requests and recording the results. The results of these checks are sent to Application Insights. If you would like this enabled follow [the guide here before continuing](Docs/EnableWatchdog.MD).
 
-9. To be able to ingress external requests via Træfik you'll need to open up and map the relevant ports on your public load balancer. For clusters on Azure, this will be your Azure Load Balancer. The default ports are; `tcp/80` (proxy) and `tcp/8080` (API) but these can be configured in `$REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml`.
+9. You can now simply publish Træfik from Visual Studio like any other Service Fabric application. Right click on the project, select `Publish` and follow the publication wizard. 
 
-10. Once the load balancer has been configured to route traffic on the required ports, you should be able to visit the Træfik dashboard at http[s]://[clusterfqdn]:8080 if you have it enabled.
+10. To be able to ingress external requests via Træfik you'll need to open up and map the relevant ports on your public load balancer. For clusters on Azure, this will be your Azure Load Balancer. The default ports are; `tcp/80` (proxy) and `tcp/8080` (API) but these can be configured in `$REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml`.
+
+11. Once the load balancer has been configured to route traffic on the required ports, you should be able to visit the Træfik dashboard at http[s]://[clusterfqdn]:8080 if you have it enabled.
 
     ![img](Docs/Images/traefikonsf.png)
 
@@ -144,6 +146,25 @@ sfctl property put --name "GettingStartedApplication/WebService" --property-desc
 ### Available Labels
 The current list of available labels is documented [here](https://master--traefik-docs.netlify.com/configuration/backends/servicefabric/). This is subject to change as we expand our capabilities.
 
+## Debugging 
+Both services will output logs to `stdout` and `stderr`. To enable these logs uncomment the `ConsoleRedirection` line in both `ServiceManifest.xml` files. 
+
+``` xml
+    <ExeHost>
+        <Program>traefik-appinsights-watchdog.exe</Program>
+        <Arguments>--appinsightskey=__YOUKEYHERE__ --watchdogtestserverport=29001 --pollintervalsec=60 --debug=true</Arguments>
+        <WorkingFolder>CodePackage</WorkingFolder>
+        <!-- <ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" /> -->
+    </ExeHost>
+```
+
+Once deployed, logs will be stored in the nodes Service Fabric folder. This will be similar to `D:\SvcFab\_App\TraefikType_App1\log` but may vary depending on your configuration.
+
+#### Common Issues
+
+- Service Fabric Provider not shown in Traefik Dashboard: Check you have correctly configured the certificates and clustermanagementurl
+- No events showing in App Insights for Traefik: Check you have uncommented the default services section and double check your instrumentation key is correct
+
 ## Custom Templates
 > For advanced users only
 
@@ -156,9 +177,10 @@ Træfik is hosted as a Service Fabric Guest Executable. Træfik has a built-in S
 To learn more about how Træfik works and how you can configure is, please [see their documentation](https://docs.traefik.io/basics/).
 
 ## Updating Traefik
-If you require to update the Træfik application to either update the binary, certs or traefik.toml file. You will need to use Service Fabric's built in 'rolling updates' as you would with any other application package.
+If you would like to update the Træfik binary, certs or traefik.toml file. You can use Service Fabric's built in 'rolling updates' as you would with any other application package.
 
 ## Related Repositories
-- Traefik fork for provider development: https://github.com/lawrencegripper/traefik/
+- Traefik Service Fabric provider development: https://github.com/containous/traefik-extra-service-fabric
 - Go SF Management SDK: https://github.com/jjcollinge/servicefabric
 - sfctl for property management: https://github.com/Azure/service-fabric-cli/pull/53
+- Application Insights Watchdog: https://github.com/lawrencegripper/traefik-appinsights-watchdog

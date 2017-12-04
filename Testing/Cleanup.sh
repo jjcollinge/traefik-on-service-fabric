@@ -3,5 +3,5 @@ sfctl application unprovision --application-type-name NodeAppType --application-
 sfctl store delete --content-path loadtest
 
 sfctl application delete --application-id traefik
-sfctl application unprovision --application-type-name TraefikType --application-type-version 1.0.0
+sfctl application unprovision --application-type-name TraefikType --application-type-version 1.0.4
 sfctl store delete --content-path ApplicationPackageRoot

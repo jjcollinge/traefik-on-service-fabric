@@ -5,7 +5,7 @@
 
 param(
 	[string]$url="https://github.com/containous/traefik/releases/download/v1.5.0-rc1/traefik_windows-amd64.exe",
-	[string]$urlWatchdog="https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.1/traefik-appinsights-watchdog.exe"
+	[string]$urlWatchdog="https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.3/windows_traefik-appinsights-watchdog.exe"
 )
 
 Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
