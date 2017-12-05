@@ -55,9 +55,9 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
 6. If you wish to track the new certificate files in Visual Studio, you'll need to add them to your solution by right clicking on the `$REPO_ROOT\Traefik\ApplicationPackageRoot\TreafikPkg\Code\certs` folder and selecting `Add Existing Item...`, navigate to the certificates on local disk and select `Add`.
 
-7. Open `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` in a text editor. If you're using a secure cluster, ensure the TLS configuration section is uncommented and make sure the provided certificate paths are correct.
+7. Open `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` in a text editor. If you're using a secure cluster, ensure the TLS configuration section is uncommented and make sure the provided certificate paths are correct. Additionally, change the `clustermanagementurl` to use the prefix `https://`. 
 
-> The `clustermanagementurl` setting is relative to where Træfik is running. If Træfik is running inside the cluster on every node, the `clustermanagementurl` should be left as `https://localhost:19080`, if however, Træfik is running externally to the cluster, an accessible endpoint should be provided. If you are testing Traefik against an unsecure cluster, like your local onebox cluster, use `http://localhost:19080`
+> The `clustermanagementurl` setting is relative to where Træfik is running. If Træfik is running inside the cluster on every node, the `clustermanagementurl` should be left as `http[s]://localhost:19080`, if however, Træfik is running externally to the cluster, an accessible endpoint should be provided. If you are testing Traefik against an unsecure cluster, like your local onebox cluster, use `http://localhost:19080`
 
 ```toml
 ################################################################
