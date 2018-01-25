@@ -1,5 +1,5 @@
 > **Disclaimer:**
-This project is under heavy development and deployment instructions are likely to be outdated during the current sprint, lasting until early December.
+Service Fabric integration was added to Træfik in [version 1.5](https://github.com/containous/traefik/releases/tag/v1.5.0) - please use this version or later.
 
 # Running Træfik on Service Fabric
 
