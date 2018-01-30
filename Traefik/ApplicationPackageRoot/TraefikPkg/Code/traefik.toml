@@ -102,7 +102,7 @@ address = ":8080"
 
 # Service Fabric Management Endpoint
 clustermanagementurl = "http://localhost:19080"
-# Note: use "http://localhost:19080" if you are using an unsecured cluster
+# Note: use "https://localhost:19080" if you're using a secure cluster
 
 # Service Fabric Management Endpoint API Version
 apiversion = "3.0"

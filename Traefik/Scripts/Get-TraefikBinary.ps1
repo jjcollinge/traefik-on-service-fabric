@@ -4,9 +4,15 @@
 # 
 
 param(
-	[string]$url="https://github.com/containous/traefik/releases/download/v1.5.0-rc1/traefik_windows-amd64.exe",
+	[string]$url,
 	[string]$urlWatchdog="https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.3/windows_traefik-appinsights-watchdog.exe"
 )
+
+if (!($url))
+{
+	Write-Host "Review current Traefik releases: https://github.com/containous/traefik/releases"
+	$url = Read-Host "Please provide the full URL of the Traefik release you wish to download"
+}
 
 Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
 Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
