@@ -2,7 +2,7 @@
 Service Fabric integration was added to Træfik in [version 1.5](https://github.com/containous/traefik/releases/tag/v1.5.0) - please use this version or later.
 
 > **Warning:**
-Work is currently underway in Træfik to standardize label names between providers. In future releases labels will change, for example: `traefik.expose` -> `traefik.enable`. See [PR16 to follow the work].(https://github.com/containous/traefik-extra-service-fabric/pull/16)
+Work is currently underway in Træfik to standardize label names between providers. In future releases labels will change, for example: `traefik.expose` -> `traefik.enable`. See [PR16 to follow the work](https://github.com/containous/traefik-extra-service-fabric/pull/16).
 
 # Running Træfik on Service Fabric
 
