@@ -19,9 +19,9 @@ Integrating Træfik and Service Fabric allows you to configure much more advance
 
 # Deploying Traefik to Service Fabric
 Service Fabric supports many different methods of deploying applications. Please select the most appropriate from the list below.
-* [Windows using Visual Studio](Docs/VisualStudio.MD)
-* [Windows, MacOS and Linux using sfctl](Docs/sfctl.MD)
-* [Windows, MacOS and Linux using docker](Docs/docker.MD)
+* [Windows using Visual Studio](Docs/Deployments/VisualStudio.MD)
+* [Windows, MacOS and Linux using sfctl](Docs/Deployments/sfctl.MD)
+* [Windows, MacOS and Linux using docker](Docs/Deployments/docker.MD)
 
 # Exposing a Service Fabric Application
 Træfik uses the concept of **labels** to configure how services are exposed.
