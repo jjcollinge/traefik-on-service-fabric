@@ -67,7 +67,7 @@ apiversion = "3.0"
 
 8. Now we need to connect `sfctl` to our cluster using a suitable authentication method
 
-    `sfctl cluster select --endpoint https://FQDN:19080 --pem /mnt/c/Users/Joni/Code/Resources/dotjson-lxx201801311146.pem --no-verify`
+    `sfctl cluster select --endpoint https://FQDN:19080 --pem /path/to/my/pem/cert.pem --no-verify`
 
 9. We next need to upload our application package to the cluster
 
