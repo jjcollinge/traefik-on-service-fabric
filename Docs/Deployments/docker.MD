@@ -23,7 +23,7 @@ Service Fabric can only reference containers stored on remote container registri
 **Warning**: This container image will contain your key and certificate files, please only push this image to a private container registry.
 
 ### Public container images
-Containous currently ONLY host Træfik for Linux container images on their [Dockerhub repository](https://hub.docker.com/_/traefik/). These images provide a minimum distribution of Træfik and are meant to be extended to add security features like certificates. For simple demonstrations on non-secure clusters, you can use these images directly.
+Containous currently ONLY host Træfik for Linux container images on their [Dockerhub repository](https://hub.docker.com/_/traefik/). These images provide a minimum distribution of Træfik and in our case need to be extended. For simple demonstrations on non-secure clusters, you can use these images directly.
 
 ## Service Fabric Container Application
 Once you've got your container image stored on your remote registry, you need to create a Service Fabric Container Application of the form:
