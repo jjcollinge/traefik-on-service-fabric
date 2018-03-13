@@ -1,3 +1,6 @@
+> **Warning:**
+Work is currently underway in Træfik to standardize label names between providers. In future releases labels and functions will change, for example: `traefik.expose` -> `traefik.enable`. This doc is currently outdated. See [PR16 to follow the work](https://github.com/containous/traefik-extra-service-fabric/pull/16).
+
 # Custom Traefik Templates
 In order to really harnass the power and flexibility of Traefik, you'll want to consider authoring your own custom TOML template file. Rather than defining which services should be exposed using an `ApplicationParameter` as you would for simple routing, you can customise the TOML template file `config.toml.tmpl` for much more complex configuration.
 
