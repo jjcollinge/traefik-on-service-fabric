@@ -14,6 +14,9 @@ if (!($url))
 	$url = Read-Host "Please provide the full URL of the Traefik release you wish to download"
 }
 
+#Github and other sites now require tls1.2 without this line the script will fail with an SSL error. 
+[Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
+
 Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
 Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
 
