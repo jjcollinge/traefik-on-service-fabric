@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ApplicationManifest ApplicationTypeName="TraefikType" ApplicationTypeVersion="1.0.4" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ApplicationManifest ApplicationTypeName="TraefikType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="Traefik_InstanceCount" DefaultValue="-1" />
   </Parameters>
@@ -7,17 +7,19 @@
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
 
+  <!-- UNCOMMENT TO ENABLE WATCHDOG -->
+  <!--
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="Watchdog" ServiceManifestVersion="1.0.4" />
-    <ConfigOverrides />
-    <Policies>
-      <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
-    </Policies>
+        <ServiceManifestRef ServiceManifestName="Watchdog" ServiceManifestVersion="1.0.0" />
+        <ConfigOverrides />
+        <Policies>
+          <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
+        </Policies>
   </ServiceManifestImport>
-
+  -->
 
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="TraefikPkg" ServiceManifestVersion="1.0.3" />
+    <ServiceManifestRef ServiceManifestName="TraefikPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
     <Policies>
       <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
@@ -34,11 +36,15 @@
         <SingletonPartition />
       </StatelessService>
     </Service>
+
+    <!-- UNCOMMENT TO ENABLE WATCHDOG AS DEFAULT SERVICE -->
+    <!--
     <Service Name="Watchdog" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="WatchdogType" InstanceCount="[Traefik_InstanceCount]">
         <SingletonPartition />
       </StatelessService>
     </Service>
+    -->
   </DefaultServices>
   <Principals>
     <Users>

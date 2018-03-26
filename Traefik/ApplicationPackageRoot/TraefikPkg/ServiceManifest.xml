@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceManifest Name="TraefikPkg" Version="1.0.3" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ServiceManifest Name="TraefikPkg" Version="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ServiceTypes>
     <!-- This is the name of your ServiceType. 
          The UseImplicitHost attribute indicates this is a guest executable service. -->
     <StatelessServiceType ServiceTypeName="TraefikType" UseImplicitHost="true" />
   </ServiceTypes>
   <!-- Code package is your service executable. -->
-  <CodePackage Name="Code" Version="1.0.3">
+  <CodePackage Name="Code" Version="1.0.0">
     <!-- The SetupEntryPoint is an optional element used to specify a
          program to be executed before the service's code is launched. -->
     <EntryPoint>
@@ -15,16 +15,13 @@
         <Arguments>--configfile=traefik.toml</Arguments>
         <WorkingFolder>CodePackage</WorkingFolder>
         <!-- Uncomment to log console output (both stdout and stderr) to one of the
-             service's working directories. -->
+             service's working directories. Do not use in production. -->
         <!--<ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />-->
       </ExeHost>
     </EntryPoint>
   </CodePackage>
   <!-- Config package is the contents of the Config directoy under PackageRoot that contains an 
        independently-updateable and versioned set of custom configuration settings for your service. -->
-  <!-- WARNING *************************** WARNING
-        ConfigPackage Name must stay as "Config"
-       WARNING *************************** WARNING -->
   <ConfigPackage Name="Config" Version="1.0.0" />
   <Resources>
     <Endpoints>

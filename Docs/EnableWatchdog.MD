@@ -1,19 +1,31 @@
 Enable Application Insight Traefik Watchdog
 ================
 
-1. Uncomment the following lines in `/Traefik/ApplicationPackageRoot/ApplicationManifest.xml`
+> **Note:** The Watchdog Windows binary is downloaded along with Traefik binary by running the script `$REPO_ROOT\Traefik\Scripts\Get-TraefikBinary.ps1`.
+
+1. Add or uncomment the following lines in your `/Traefik/ApplicationPackageRoot/ApplicationManifest.xml`
 
 ``` xml
-    <Service Name="Traefik" ServicePackageActivationMode="ExclusiveProcess">
-      <StatelessService ServiceTypeName="TraefikType" InstanceCount="[Traefik_InstanceCount]">
-        <SingletonPartition />
-      </StatelessService>
-    </Service>
-    <!-- <Service Name="Watchdog" ServicePackageActivationMode="ExclusiveProcess">
+<ApplicationManifest>
+    <ServiceManifestImport>
+        <ServiceManifestRef ServiceManifestName="Watchdog" ServiceManifestVersion="1.0.0" />
+        <ConfigOverrides />
+        <Policies>
+          <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
+        </Policies>
+  </ServiceManifestImport>
+  ...
+  <DefaultServices>
+    ...
+    <Service Name="Watchdog" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="WatchdogType" InstanceCount="[Traefik_InstanceCount]">
         <SingletonPartition />
       </StatelessService>
-    </Service> -->
+    </Service>
+    ...
+  </DefaultServices>
+  ...
+  </ApplicationManifest>
 ```
 
 2. Copy your Application Insights instrumentation key in into the placeholder `__YOURKEYHERE__` in `/Treafik/ApplicationPackageRoot/Watchdog/ServiceManifest.xml`
