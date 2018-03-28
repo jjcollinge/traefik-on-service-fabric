@@ -23,6 +23,9 @@ Service Fabric supports many different methods of deploying applications. Please
 * [Windows, MacOS and Linux using sfctl](Docs/Deployments/sfctl.MD)
 * [Windows, MacOS and Linux using docker](Docs/Deployments/docker.MD) [Not recommended currently]
 
+# Releases
+The Service Fabric integration ships as part of Træfik v1.5 or greater, so for stable builds please use the official [Træfik releases page](https://github.com/containous/traefik/releases). The [releases](https://github.com/jjcollinge/traefik-on-service-fabric/releases) on this repository are for experimental features that may or may not be included in the upstream Træfik tree at a later date.
+
 # Exposing a Service Fabric Application
 Træfik uses the concept of **labels** to configure how services are exposed.
 
