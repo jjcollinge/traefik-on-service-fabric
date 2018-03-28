@@ -8,25 +8,33 @@ param(
 	[string]$urlWatchdog="https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.3/windows_traefik-appinsights-watchdog.exe"
 )
 
-if (!($url))
+while (!($url))
 {
-	Write-Host "Review current Traefik releases: https://github.com/containous/traefik/releases"
-	$url = Read-Host "Please provide the full URL of the Traefik release you wish to download"
+	Write-Host "Review current Traefik releases:" -foregroundcolor Green
+	Write-Host "https://github.com/containous/traefik/releases"
+	Write-Host "Please provide the full URL of the Traefik release you wish to download: " -foregroundcolor Green -NoNewline
+	$url = Read-Host 
 }
 
 #Github and other sites now require tls1.2 without this line the script will fail with an SSL error. 
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 
-Write-Host "Downloading Traefik Binary from $url" -foregroundcolor Green
-Write-Host "to use a specific binary use -url arg" -foregroundcolor Green
+Write-Host "Downloading Traefik Binary from: " -foregroundcolor Green
+Write-Host $url
+Write-Host "Downloading Traefik Watchdog Binary from:" -foregroundcolor Green
+Write-Host $urlWatchdog
 
-$outfile = $PSScriptRoot+"/../ApplicationPackageRoot/TraefikPkg/Code/traefik.exe"
-$outfileWatchdog = $PSScriptRoot+"/../ApplicationPackageRoot/Watchdog/Code/traefik-appinsights-watchdog.exe"
+$traefikPath = "/../ApplicationPackageRoot/TraefikPkg/Code/traefik.exe"
+$treafikWatchdogPath = "/../ApplicationPackageRoot/Watchdog/Code/traefik-appinsights-watchdog.exe"
+$outfile = Join-Path $PSScriptRoot $traefikPath
+$outfileWatchdog = Join-Path $PSScriptRoot $treafikWatchdogPath
 
 Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
 Invoke-WebRequest -Uri $urlWatchdog -OutFile $outfileWatchdog -UseBasicParsing
 
-Write-Host "Download complete" -foregroundcolor Green
+Write-Host "Download complete, files:" -foregroundcolor Green
+Write-Host $outfile
+Write-Host $outfileWatchdog
 
 Write-Host "Traefik version downloaded:" -foregroundcolor Green
 

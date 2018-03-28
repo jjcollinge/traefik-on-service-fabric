@@ -12,9 +12,9 @@ First things first, make sure you have a Windows Service Fabric cluster up and r
 
 2. Download the Træfik binary into the solution by running the following PowerShell script.
 
-    `./$REPO_ROOT/Traefik/Scripts/Get-TraefikBinary.ps1`
+    `./$REPO_ROOT/Traefik/Scripts/Get-TraefikBinary.ps1 -url $TRAEFIK_RELEASE`
 
-    > This script will use a specific build from this repository's release list. To override the build's download URL, provide the `-url` parameter to the script.
+    > This script requires a `url` to be provided to the Træfik release you wish to download and install. A list of the available release are here: https://github.com/containous/traefik/releases.
 
 3. Open the `Traefik.sln` file in Visual Studio
 
