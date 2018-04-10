@@ -5,8 +5,8 @@ Developing this solution is a non-trivial task especially if you are unfamiliar 
 
 ## Requirements
 
-- Golang Environment: [Guide](https://golang.org/doc/install) *NOTE*: Ensure you have your [GOPATH](https://github.com/golang/go/wiki/GOPATH) and other required environment variables configured.
-- Docker Installed
+- Golang Environment: [Guide](https://golang.org/doc/install) **NOTE**: Ensure you have your [GOPATH](https://github.com/golang/go/wiki/GOPATH) and other required environment variables configured.
+- [Docker](https://docs.docker.com/install/) Installed
 - Dep Installed: [Install Guide](https://github.com/golang/dep) and [How-to](https://golang.github.io/dep/docs/introduction.html)
 - Local Service Fabric cluster: [Mac](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-get-started-mac) or [Windows](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-get-started)
 - [Sample Application](https://azure.microsoft.com/en-us/resources/samples/service-fabric-dotnet-getting-started/) deployed into Service Fabric cluster
@@ -14,12 +14,12 @@ Developing this solution is a non-trivial task especially if you are unfamiliar 
 
 ### Optional but recommended
 
-- VSCode with [Go Extension](https://github.com/microsoft/vscode-go)
+- [VSCode](https://code.visualstudio.com/docs/setup/setup-overview) with [Go Extension](https://github.com/microsoft/vscode-go)
 - [Delve](https://github.com/Microsoft/vscode-go/wiki/Debugging-Go-code-using-VS-Code) debugger installed and configured 
 
 ## Introduction
 
-In this doc we will focus building out your dev environment and assume a working knowledge of the SF provider and Traefik. 
+In this doc we will focus on setting up your dev environment and assume a working knowledge of the SF provider and Traefik. 
 
 [This blog](https://blogs.msdn.microsoft.com/azureservicefabric/2018/04/05/intelligent-routing-on-service-fabric-with-traefik/) provides a good understanding of how the integration works and why it was written. It is highly recommended that you read the blog and [Traefik docs](https://docs.traefik.io/) before proceeding. 
 
@@ -29,7 +29,9 @@ The solution consists of several different github projects:
 - [Service Fabric Go SDK](https://github.com/jjcollinge/servicefabric): SF Management SDK for Go
 - [Traefik](https://github.com/containous/traefik): Builds the proxy  
 
-The `Traefik` project imports `Traefik Extra Service Fabric` which in turn import the `Service Fabric Golang SDK` all using `dep` and versioned by CommitID pinning. 
+The `Traefik` project imports `Traefik Extra Service Fabric` which in turn import the `Service Fabric Golang SDK` all using `dep` and versioned by CommitID pinning.
+
+`Traefik (03ce6a) => Traefik Extra Service Fabric (29a6d7) => Service Fabric Golang SDK (8eebe1)`
 
 To release an update of the `Service Fabric Golang SDK` a pull-request (PR) should be made to it's repository and once accepted `Traefik Extra Service Fabric`'s `gopkg.toml` can be update to reference this new CommitID and this change is PR'd. Then finally `Traefik` can be updated to reference this new version of `Traefik Extra Service Fabric`. While this provides the necessary control to version releases of `Traefik` this isn't a workable flow when developing.  
 
