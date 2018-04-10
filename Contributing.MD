@@ -1,15 +1,16 @@
 # Contributing to Traefik on Service Fabric
 
 > **Warning:**
-Developing this solution is a non-trivial task especially if you are unfamiliar with the `golang`, [`dep`](https://github.com/golang/dep) and it's tooling. We highly recommend taking the time to understand both `dep` and `golang` on a simpler project before starting.  
+Developing this solution is a non-trivial task especially if you are unfamiliar with the `golang`, [`dep`](https://github.com/golang/dep) and its tooling. We highly recommend taking the time to understand both `dep` and `golang` on a simpler project before starting.  
 
 ## Requirements
 
-- Golang Environment: [Guide](https://golang.org/doc/install) *NOTE*: Ensure you have your GoPath and other required Envvars configured.
+- Golang Environment: [Guide](https://golang.org/doc/install) *NOTE*: Ensure you have your [GOPATH](https://github.com/golang/go/wiki/GOPATH) and other required environment variables configured.
 - Docker Installed
-- Dep Installed: [Install Guide](https://github.com/golang/dep) amd [How-to](https://golang.github.io/dep/docs/introduction.html)
+- Dep Installed: [Install Guide](https://github.com/golang/dep) and [How-to](https://golang.github.io/dep/docs/introduction.html)
 - Local Service Fabric cluster: [Mac](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-get-started-mac) or [Windows](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-get-started)
 - [Sample Application](https://azure.microsoft.com/en-us/resources/samples/service-fabric-dotnet-getting-started/) deployed into Service Fabric cluster
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ### Optional but recommended
 
@@ -30,18 +31,20 @@ The solution consists of several different github projects:
 
 The `Traefik` project imports `Traefik Extra Service Fabric` which in turn import the `Service Fabric Golang SDK` all using `dep` and versioned by CommitID pinning. 
 
-To release an update of the `Service Fabric Golang SDK` a PR would be made to it's repository and once accepted `Traefik Extra Service Fabric`'s `gopkg.toml` can be update to reference this new CommitID and this change is PR'd. Then finally `Traefik` can be updated to reference this new version of `Traefik Extra Service Fabric`. While this provides the necessary control to version releases of `Traefik` this isn't a workable flow when developing.  
+To release an update of the `Service Fabric Golang SDK` a pull-request (PR) should be made to it's repository and once accepted `Traefik Extra Service Fabric`'s `gopkg.toml` can be update to reference this new CommitID and this change is PR'd. Then finally `Traefik` can be updated to reference this new version of `Traefik Extra Service Fabric`. While this provides the necessary control to version releases of `Traefik` this isn't a workable flow when developing.  
 
 ## Recommended Dev Setup
 
-For local development you can simplify the flow by cloning both `Traefik Extra Service Fabric` and `Service Fabric Go SDK` into the `/vendor` folder of `Traefik` 
+For local development you can simplify the flow by cloning both `Traefik Extra Service Fabric` and `Service Fabric Go SDK` into the `/vendor` folder of `Traefik`.
 
-> **NOTE** `master` of `Traefik Extra Service Fabric` is compatible with the latest `traefik` release so checkout the right `traefik` branch, eg. `v1.6` not `master`. 
+> **NOTE:** `master` of `Traefik Extra Service Fabric` is compatible with the latest `Traefik` release so checkout the right `Traefik` branch, eg. `v1.6` not `master`. 
 
 This provides a quick and easy way to build/debug `Traefik` by making changes to `Traefik Extra Service Fabric` in the `/vendor` folder. These changes can then be checked in an pushed from each projects folder `/vendor/github.com/jjcollinge/servicefabric` for example. **Note** This is only a local solution to speed things up, the full flow is required for releases. 
 
-> **NOTE**
-> Be aware that `golang` is sensitive to file paths so, even if you are working on a fork, you must ensure your `traefik` instance is located at `$gopath/src/github.com/containous/traefik`
+> **NOTE:** Be aware that `golang` is sensitive to file paths so, even if you are working on a fork, you must ensure your `Traefik` instance is located at `$gopath/src/github.com/containous/traefik`
+
+> **NOTE:** If you do work inside `Traefik`'s `/vendor` directory, it may be helpful to delete the `.git` folder inside `Traefik` to avoid confusion between the nested git repositories.
+
 
 Assuming `~/scratch` is your `gopath` then this will look roughly like this: 
 
@@ -91,13 +94,13 @@ Assuming `~/scratch` is your `gopath` then this will look roughly like this:
 
 1. Follow [Traefik WebUI Build](https://github.com/containous/traefik/tree/master/webui#how-to-build-for-backends-developer): How to build for backend devs 
 
-    **NOTE**: If you have an empty '/static' folder already delete it before running `make generate-ui`
+    **NOTE**: If you have an empty `/static` folder already delete it before running `make generate-ui`. This may fail on Windows, if so, please use a `bash` environment such as [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 2. Follow the [Traefik Guide](https://github.com/containous/traefik/blob/master/CONTRIBUTING.md#method-2-using-go): Method #2 
 
 ### Testing `Traefik Extra Service Fabric` and the SDK
 
-In the `traefik` dir run:
+In the `traefik` directory run:
 ``` 
     go test -v ./vendor/github.com/containous/traefik-extra-service-fabric/...
     go test -v ./vendor/github.com/jjcollinge/servicefabric/...
@@ -105,7 +108,7 @@ In the `traefik` dir run:
 
 ## Debugging using VSCode
 
-In your `traefik` dir create the following files then hit F5. You can step and set breakpoints in both `traefik` and the other packages in the `vendor` file.
+In your `Traefik` directory create the following files then hit `F5`. You can step and set breakpoints in both `Traefik` and the other packages in the `vendor` file.
 
 `.vscode/launch.json`
 ``` json
