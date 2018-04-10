@@ -110,6 +110,10 @@ To learn more about how Træfik works and how you can configure is, please [see 
 ## Updating Traefik
 If you would like to update the Træfik binary, certs or traefik.toml file. You can use Service Fabric's built in 'rolling updates' as you would with any other application package.
 
+## Contributing 
+
+See our [Contributing guide](Contributing.MD)
+
 ## Related Repositories
 - Traefik Service Fabric provider development: https://github.com/containous/traefik-extra-service-fabric
 - Go SF Management SDK: https://github.com/jjcollinge/servicefabric
