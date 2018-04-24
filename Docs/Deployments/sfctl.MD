@@ -11,7 +11,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
 2. Download the latest Træfik binary for your architecture from the [releases page](https://github.com/containous/traefik/releases)
 
-    `curl -LOk https://github.com/containous/traefik/releases/download/v1.5.1/traefik_windows-amd64.exe > traefik.exe`
+    `curl -LOk https://github.com/containous/traefik/releases/download/v1.5.4/traefik_windows-amd64.exe > traefik.exe`
 
 3. Copy the Træfik binary to the expected location
 
