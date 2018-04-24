@@ -48,6 +48,9 @@ In order to assign labels for your service, you can add `Extensions` to your ser
 </StatelessServiceType>
 ```
 
+> **Warning:**
+In Træfik v1.6 label names have been standardized between providers. If you are using v1.6 please update the sample as follows: `traefik.expose` -> `traefik.enable`. Additionally backends will no longer be created for services which aren't enabled. 
+
 ## Dynamically updating Service labels
 Once you've deployed your service with some default labels, you may need to change the way Træfik is routing requests without redeploying. You can overwrite and add new labels to a named service using Service Fabric's Property Management API. Træfik will then pick up these new/updated labels and reconfigure itself.
 
