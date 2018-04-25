@@ -63,10 +63,6 @@ $ git clone https://github.com/containous/traefik-extra-service-fabric
 $ cd $GOPATH/src/github.com/containous/traefik/vendor/github.com/jjcollinge
 $ rm -r servicefabric
 $ git clone https://github.com/jjcollinge/servicefabric
-
-# Build https://github.com/containous/traefik/blob/master/CONTRIBUTING.md#build-tr%C3%A6fik
-$ cd $GOPATH/src/github.com/containous/traefik
-$ go build ./cmd/traefik
 ```
 
 ## Building & Testing
