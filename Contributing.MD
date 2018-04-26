@@ -67,7 +67,7 @@ $ git clone https://github.com/jjcollinge/servicefabric
 
 ## Building & Testing
 
-> **WARNING:** Building the top level `traefik` solution can overwrite the `vendor` file and any changes in `traefik-service-fabric-extra` can be lost. This is caused by `make` or `dep` ensure changes are pushed to a remote before attempting to build `traefik`.
+> **WARNING:** Building the top level `traefik` solution can overwrite the `vendor` file and any changes in `traefik-service-fabric-extra` can be lost. This is caused by `make` ensure changes are pushed to a remote before attempting to build `traefik`. Be sure to use `go build ./cmd/traefik` to build rather than the `make` command. 
 
 ### Traefik
 
