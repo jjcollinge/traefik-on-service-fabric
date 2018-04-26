@@ -71,7 +71,7 @@ curl -X PUT \
 > WARNING: The json provided in the body is case sensitive
 
 ### Setting a label dynamically using sfctl
-It is also possiblte to use [sfctl](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) to operate with properties without make raw HTTP requests.
+It is also possible to use [sfctl](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) to operate with properties without make raw HTTP requests.
 
 ```bash
 sfctl property put --name "GettingStartedApplication/WebService" --property-description "{\"PropertyName\":\"traefik.frontend.rule.default\",\"Value\":{\"Kind\":\"String\",\"Data\":\"PathPrefixStrip: /a/path/to/strip\"}}"
