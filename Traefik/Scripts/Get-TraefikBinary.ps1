@@ -4,20 +4,22 @@
 # 
 
 param(
-	[string]$url,
-	[string]$urlWatchdog="https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.3/windows_traefik-appinsights-watchdog.exe"
+    [string]$version,
+    [string]$urlWatchdog = "https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/v0.0.3/windows_traefik-appinsights-watchdog.exe"
 )
 
-while (!($url))
-{
-	Write-Host "Review current Traefik releases:" -foregroundcolor Green
-	Write-Host "https://github.com/containous/traefik/releases"
-	Write-Host "Please provide the full URL of the Traefik release you wish to download: " -foregroundcolor Green -NoNewline
-	$url = Read-Host 
+while (!($version)) {
+    Write-Host "Review current Traefik releases:" -foregroundcolor Green
+    Write-Host "https://github.com/containous/traefik/releases"
+    Write-Host "Please provide the release tag (e.g. 'v1.6.0-rc6' or 'v1.5.4') of the Traefik release you wish to download: " -foregroundcolor Green -NoNewline
+    $version = Read-Host 
 }
 
 #Github and other sites now require tls1.2 without this line the script will fail with an SSL error. 
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
+
+$traefikBaseUrl = "https://github.com/containous/traefik/releases/download/"
+$url = $traefikBaseUrl + $version + "/traefik_windows-amd64.exe"
 
 Write-Host "Downloading Traefik Binary from: " -foregroundcolor Green
 Write-Host $url
