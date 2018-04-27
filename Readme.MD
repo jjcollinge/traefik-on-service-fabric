@@ -74,7 +74,7 @@ curl -X PUT \
 It is also possible to use [sfctl](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) to operate with properties without make raw HTTP requests.
 
 ```bash
-sfctl property put --property-name "GettingStartedApplication/WebService" --value "{\"Kind\": \"String\",\"Data\": \"PathPrefixStrip: /a/path/to/strip\"}"
+sfctl property put --name-id "GettingStartedApplication/WebService" --property-name "traefik.frontend.rule.default" --value "{\"Kind\": \"String\",\"Data\": \"PathPrefixStrip: /a/path/to/strip\"}"
 ```
 > The command above is current as of sftcl v4.0.0.
 
