@@ -67,6 +67,8 @@ $ git clone https://github.com/jjcollinge/servicefabric
 
 ## Building & Testing
 
+> **WARNING:** Building the top level `traefik` solution can overwrite the `vendor` file and any changes in `traefik-service-fabric-extra` can be lost. This is caused by `make`. Ensure changes are pushed to a remote before attempting to build `traefik`. Be sure to use `go build ./cmd/traefik` to build rather than the `make` command. 
+
 ### Traefik
 
 1. Follow [Traefik WebUI Build: How to build for backend devs](https://github.com/containous/traefik/tree/master/webui#how-to-build-for-backends-developer).
