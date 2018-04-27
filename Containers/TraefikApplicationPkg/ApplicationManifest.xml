@@ -17,6 +17,7 @@
       <RepositoryCredentials AccountName="ENTER YOUR ACCOUNT NAME HERE" Password="ENTER YOUR ACCOUNT PASSWORD HERE" PasswordEncrypted="false"/>
         <PortBinding ContainerPort="8080" EndpointRef="TraefikContainerTypeDashboardEndpoint"/>
         <PortBinding ContainerPort="80" EndpointRef="TraefikContainerTypeEndpoint"/>
+        <CertificateRef Name="Cluster" X509StoreName="My" X509FindValue="ENTER YOUR SERVER CERTIFICATE THUMBPRINT HERE"/>
       </ContainerHostPolicies>
     </Policies>
   </ServiceManifestImport>
