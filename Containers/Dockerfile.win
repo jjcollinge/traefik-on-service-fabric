@@ -18,4 +18,5 @@ EXPOSE 80
 EXPOSE 8080
 
 # to persist files, configure volumes.
+USER ContainerAdministrator
 ENTRYPOINT ["traefik.exe", "--configfile=traefik.toml"]
