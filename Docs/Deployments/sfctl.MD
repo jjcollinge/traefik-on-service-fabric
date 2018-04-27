@@ -65,6 +65,17 @@ apiversion = "3.0"
 
 7. *Optional*  You can choose to enable a watchdog service which will report stats and check Træfik is routing correctly by sending synthetic requests and recording the results. The results of these checks are sent to Application Insights. If you would like this enabled follow [the guide here before continuing](../EnableWatchdog.MD).
 
+> **NOTE:** If you are running on Linux/Mac you have to change the ServiceManifest.xml as below: 
+
+```
+   <EntryPoint>
+      <ExeHost>
+        <Program>traefik</Program>
+        ...
+      </ExeHost>
+    </EntryPoint>
+```
+
 8. Now we need to connect `sfctl` to our cluster using a suitable authentication method
 
     `sfctl cluster select --endpoint https://FQDN:19080 --pem /path/to/my/pem/cert.pem --no-verify`
