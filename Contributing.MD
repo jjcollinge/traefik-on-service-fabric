@@ -77,6 +77,21 @@ $ go build ./cmd/traefik
 
     **NOTE**: If you have an empty `/static` folder already delete it before running `make generate-ui`. This may fail on Windows, if so, please use a `bash` environment such as [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
+    For the build to run with WSL you will also need to have the docker client installed in the WSL environment and the TCP port exposed on localhost from Docker for Windows.
+
+    In WSL download the version of Docker that matches that of Docker for windows (should be the latest)
+```
+        wget https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_18.03.0~ce-0~ubuntu_amd64.deb
+
+        sudo apt-get install libltdl7
+
+        sudo dpkg -i ./docker-ce_18.03.0~ce-0~ubuntu_amd64.deb
+
+        export DOCKER_HOST=tcp://127.0.0.1:2375
+```
+
+
+
 2. Follow the [Traefik Guide: Method #2](https://github.com/containous/traefik/blob/master/CONTRIBUTING.md#method-2-using-go)
 
 ### Testing `Traefik Extra Service Fabric` and the SDK
