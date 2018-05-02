@@ -68,14 +68,15 @@ curl -X PUT \
 }'
 ```
 
-> WARNING: The json provided in the body is case sensitive
+> WARNING: The json provided in the body is case sensitive.
 
 ### Setting a label dynamically using sfctl
-A future release of [sfctl](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) will allow you to operate with properties without make raw HTTP requests. There is an outstanding PR [here](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) if you wish to try this right away.
+It is also possible to use [sfctl](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cli) to operate with properties without make raw HTTP requests.
 
 ```bash
-sfctl property put --name "GettingStartedApplication/WebService" --property-description "{\"PropertyName\":\"traefik.frontend.rule.default\",\"Value\":{\"Kind\":\"String\",\"Data\":\"PathPrefixStrip: /a/path/to/strip\"}}"
+sfctl property put --name-id "GettingStartedApplication/WebService" --property-name "traefik.frontend.rule.default" --value "{\"Kind\": \"String\",\"Data\": \"PathPrefixStrip: /a/path/to/strip\"}"
 ```
+> The command above is current as of sftcl v4.0.0.
 
 ### Available Labels
 The current list of available labels is documented [here](https://master--traefik-docs.netlify.com/configuration/backends/servicefabric/). This is subject to change as we expand our capabilities.
@@ -103,7 +104,7 @@ Once deployed, logs will be stored in the nodes Service Fabric folder. This will
 > For advanced users only
 
 If the default configuration the Azure Service Fabric Træfik provider builds is not sufficient for your needs, you can write a custom template that the provider will use instead. Documentation on how to write a custom template is available [here](https://docs.traefik.io/configuration/commons/#override-default-configuration-template). Your custom template will need to be added to either your application's `Code` or `Config` folders and the relative URL provided in the traefik.toml configuration.
-The functions available for you to use in your custom template are documented [here](https://github.com/jjcollinge/traefik-on-service-fabric/blob/master/Docs/CustomTemplates.MD)
+The functions available for you to use in your custom template are documented [here](https://github.com/jjcollinge/traefik-on-service-fabric/blob/master/Docs/CustomTemplates.MD).
 
 ## How does Træfik on Azure Service Fabric work?
 Træfik is hosted as a Azure Service Fabric Guest Executable. Træfik has a built-in Azure Service Fabric [provider](https://github.com/containous/traefik/tree/master/provider) which will query the Service Fabric management API to discover what services are currently being hosted in the cluster (referred to as `backends`). The provider then maps routing rules (known as `frontends`) to these service instances (referred to as `backends`). Ingress flows in via `entrypoints` (http, https, etc.), `frontends` are then applied to [match](https://docs.traefik.io/basics/#matchers) and [modify](https://docs.traefik.io/basics/#modifiers) each requests before load balancing across the associated `backends`. The provider will take into account the `Health` and `Status` of each of the services to ensure requests are only routed to healthy service instances.

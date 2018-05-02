@@ -11,7 +11,7 @@ First things first, make sure you have a Service Fabric cluster up and running, 
 
 2. Download the latest Træfik binary for your architecture from the [releases page](https://github.com/containous/traefik/releases)
 
-    `curl -LOk https://github.com/containous/traefik/releases/download/v1.5.1/traefik_windows-amd64.exe > traefik.exe`
+    `curl -LOk https://github.com/containous/traefik/releases/download/v1.5.4/traefik_windows-amd64.exe > traefik.exe`
 
 3. Copy the Træfik binary to the expected location
 
@@ -64,6 +64,17 @@ apiversion = "3.0"
 ```
 
 7. *Optional*  You can choose to enable a watchdog service which will report stats and check Træfik is routing correctly by sending synthetic requests and recording the results. The results of these checks are sent to Application Insights. If you would like this enabled follow [the guide here before continuing](../EnableWatchdog.MD).
+
+> **NOTE:** If you are running on Linux/Mac you have to change the ServiceManifest.xml as below: 
+
+```
+   <EntryPoint>
+      <ExeHost>
+        <Program>traefik</Program>
+        ...
+      </ExeHost>
+    </EntryPoint>
+```
 
 8. Now we need to connect `sfctl` to our cluster using a suitable authentication method
 

@@ -37,75 +37,52 @@ To release an update of the `Service Fabric Golang SDK` a pull-request (PR) shou
 
 ## Recommended Dev Setup
 
-For local development you can simplify the flow by cloning both `Traefik Extra Service Fabric` and `Service Fabric Go SDK` into the `/vendor` folder of `Traefik`.
+```
+$ go get github.com/containous/traefik
+$ cd $GOPATH/src/github.com/containous/traefik
 
-> **NOTE:** `master` of `Traefik Extra Service Fabric` is compatible with the latest `Traefik` release so checkout the right `Traefik` branch, eg. `v1.6` not `master`. 
+# `master` branch of `Traefik Extra Service Fabric` is compatible with `Traefik` v1.6+
+$ git checkout v1.6
+```
 
-This provides a quick and easy way to build/debug `Traefik` by making changes to `Traefik Extra Service Fabric` in the `/vendor` folder. These changes can then be checked in an pushed from each projects folder `/vendor/github.com/jjcollinge/servicefabric` for example. **Note** This is only a local solution to speed things up, the full flow is required for releases. 
+For local development you can simplify the flow by cloning both `Traefik Extra Service Fabric` and `Service Fabric Go SDK` into the `/vendor` folder of `Traefik`. This provides a quick and easy way to build/debug `Traefik` by making changes to `Traefik Extra Service Fabric` in the `/vendor` folder. These changes can then be checked in an pushed from each projects folder `/vendor/github.com/jjcollinge/servicefabric` for example. 
+
+> **NOTE:** This is only a local solution to speed things up, the full flow is required for releases. 
 
 > **NOTE:** Be aware that `golang` is sensitive to file paths so, even if you are working on a fork, you must ensure your `Traefik` instance is located at `$gopath/src/github.com/containous/traefik`
 
 > **NOTE:** If you do work inside `Traefik`'s `/vendor` directory, it may be helpful to delete the `.git` folder inside `Traefik` to avoid confusion between the nested git repositories.
 
-
-Assuming `~/scratch` is your `gopath` then this will look roughly like this: 
-
 ```
- 
-~/scratch >> mkdir -p src/github.com/containous/traefik
-~/scratch >> cd src/github.com/containous/traefik
-~/scratch/src/github.com/containous>> git clone https://github.com/containous/traefik/
+# replace vendored `containous/traefik-extra-service-fabric` folder with git repo
+$ cd $GOPATH/src/github.com/containous/traefik/vendor/github.com/containous
+$ rm -r traefik-extra-service-fabric
+$ git clone https://github.com/containous/traefik-extra-service-fabric
 
-    Cloning into 'traefik'...
-    remote: Counting objects: 27505, done.
-    remote: Compressing objects: 100% (300/300), done.
-    remote: Total 27505 (delta 213), reused 459 (delta 175), pack-reused 26876
-    Receiving objects: 100% (27505/27505), 25.92 MiB | 2.17 MiB/s, done.
-    Resolving deltas: 100% (14236/14236), done.
-    Checking out files: 100% (4772/4772), done.
-
-~/scratch/src/github.com/containous>> cd traefik
-~/scratch/src/github.com/containous>> git checkout v1.6 && cd ./traefik/vendor/github.com/containous
-~/scratch/src/github.com/containous/traefik/vendor/github.com/containous >> rm -r traefik-extra-service-fabric
- ~/scratch/src/github.com/containous/traefik/vendor/github.com/containous >> git clone https://github.com/containous/traefik-extra-service-fabric
-
-    Cloning into 'traefik-extra-service-fabric'...
-    remote: Counting objects: 313, done.
-    remote: Compressing objects: 100% (25/25), done.
-    remote: Total 313 (delta 15), reused 21 (delta 12), pack-reused 276
-    Receiving objects: 100% (313/313), 102.33 KiB | 548.00 KiB/s, done.
-    Resolving deltas: 100% (171/171), done.
-~/scratch/src/github.com/containous/traefik/vendor/github.com/containous >> cd ../jjcollinge
-
-~/scratch/src/github.com/containous/traefik/vendor/github.com/jjcollinge >> rm -r servicefabric
-~/scratch/src/github.com/containous/traefik/vendor/github.com/jjcollinge >> git clone https://github.com/jjcollinge/servicefabric
-
-    Cloning into 'servicefabric'...
-    remote: Counting objects: 93, done.
-    remote: Total 93 (delta 0), reused 0 (delta 0), pack-reused 93
-    Unpacking objects: 100% (93/93), done
-
-~/scratch/src/github.com/containous/traefik/vendor/github.com/jjcollinge>> cd ../../../
-~/scratch/src/github.com/containous/traefik> go build ./cmd/traefik
-
+# replace vendored `jjcollinge/servicefabric` folder with git repo
+$ cd $GOPATH/src/github.com/containous/traefik/vendor/github.com/jjcollinge
+$ rm -r servicefabric
+$ git clone https://github.com/jjcollinge/servicefabric
 ```
 
 ## Building & Testing
 
+> **WARNING:** Building the top level `traefik` solution can overwrite the `vendor` file and any changes in `traefik-service-fabric-extra` can be lost. This is caused by `make`. Ensure changes are pushed to a remote before attempting to build `traefik`. Be sure to use `go build ./cmd/traefik` to build rather than the `make` command. 
+
 ### Traefik
 
-1. Follow [Traefik WebUI Build](https://github.com/containous/traefik/tree/master/webui#how-to-build-for-backends-developer): How to build for backend devs 
+1. Follow [Traefik WebUI Build: How to build for backend devs](https://github.com/containous/traefik/tree/master/webui#how-to-build-for-backends-developer).
 
     **NOTE**: If you have an empty `/static` folder already delete it before running `make generate-ui`. This may fail on Windows, if so, please use a `bash` environment such as [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-2. Follow the [Traefik Guide](https://github.com/containous/traefik/blob/master/CONTRIBUTING.md#method-2-using-go): Method #2 
+2. Follow the [Traefik Guide: Method #2](https://github.com/containous/traefik/blob/master/CONTRIBUTING.md#method-2-using-go)
 
 ### Testing `Traefik Extra Service Fabric` and the SDK
 
 In the `traefik` directory run:
 ``` 
-    go test -v ./vendor/github.com/containous/traefik-extra-service-fabric/...
-    go test -v ./vendor/github.com/jjcollinge/servicefabric/...
+go test -v ./vendor/github.com/containous/traefik-extra-service-fabric/...
+go test -v ./vendor/github.com/jjcollinge/servicefabric/...
 ```
 
 ## Debugging using VSCode
