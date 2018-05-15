@@ -20,7 +20,7 @@ namespace TraefikPreConfiguratorWindows
         /// 2) If you want to dump the certs from local machine and KeyVault and make it work for one environment config.
         ///     --ConfigureCerts "Certs" --ApplicationInsightsKey "AIKeyHere" --CertsToConfigure "ClusterCert;MyLocalMachine;ClusterCertThumbprint,SSLCert;KeyVault;SSLSecretName" --KeyVaultUri "https://dummyvault.vault.azure.net/" --KeyVaultClientId "1dc8b8b3-be3e-482a-b56b-9092c91aa4b2" -KeyVaultClientSecret "keyvaultappsecret"
         /// 3) If you want to dump the certs from local machine and make it work for different environments having different configs.
-        ///     a) Set the arguments to --UseEnvironmentVariables
+        ///     a) Set the arguments to --UseEnvironmentVariables (or -UseEnv)
         ///     b) And set the Environment variables 
         ///         i) ConfigureCerts to Certs
         ///         ii) ApplicationInsightsKey to AiKeyHere
@@ -31,7 +31,7 @@ namespace TraefikPreConfiguratorWindows
         {
             CommandLineApplication commandLineApplication = new CommandLineApplication(false);
             CommandOption useEnvironmentVariablesOption = commandLineApplication.Option(
-                "--UseEnvironmentVariables",
+                "-UseEnv | --UseEnvironmentVariables",
                 "Instead of using specified options, use Environment varibles with the same name (except the -- at start). This is to enable different integrations for different environments." +
                 " If you use this, command line values are ignored.",
                 CommandOptionType.NoValue);
@@ -71,7 +71,6 @@ namespace TraefikPreConfiguratorWindows
             {
                 try
                 {
-                    ////System.Threading.Thread.Sleep(20000);
                     bool useEnvironmentVariables = useEnvironmentVariablesOption.HasValue();
                     if (applicationInsightsInstrumentationKeyOption.HasValueEx(useEnvironmentVariables))
                     {

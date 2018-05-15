@@ -13,11 +13,11 @@
     <!--<SetupEntryPoint>
       <ExeHost>
         <Program>TraefikPreConfiguratorWindows.exe</Program>
-        <Arguments>--><!--For Arguments look at Program.cs. in TraefixPreConfiguratorWindows project.--><!--</Arguments>
+        <Arguments>-UseEnv</Arguments>
         <WorkingFolder>CodePackage</WorkingFolder>
         --><!-- Uncomment to log console output (both stdout and stderr) to one of the
              service's working directories. Do not use in production. --><!--
-        --><!--<ConsoleRedirection FileRetentionCount="10" FileMaxSizeInKb="2048" />--><!--
+        --><!--<ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />--><!--
       </ExeHost>
     </SetupEntryPoint>-->
     <EntryPoint>
@@ -30,6 +30,15 @@
         <!--<ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />-->
       </ExeHost>
     </EntryPoint>
+    <!-- Environment variables used by Treafik PreConfigurator to download and convert certificates. -->
+    <EnvironmentVariables>
+      <EnvironmentVariable Name="ConfigureCerts" Value="Certs"/>
+      <EnvironmentVariable Name="ApplicationInsightsKey" Value="[TraefikApplicationInsightsKey]"/>
+      <EnvironmentVariable Name="CertsToConfigure" Value="[TraefikCertsToConfigure]"/>
+      <EnvironmentVariable Name="KeyVaultUri" Value="[TraefikKeyVaultUri]"/>
+      <EnvironmentVariable Name="KeyVaultClientId" Value="[TraefikKeyVaultClientId]"/>
+      <EnvironmentVariable Name="KeyVaultClientCert" Value="[TraefikKeyVaultClientCert]"/>
+    </EnvironmentVariables>
   </CodePackage>
   <!-- Config package is the contents of the Config directoy under PackageRoot that contains an 
        independently-updateable and versioned set of custom configuration settings for your service. -->

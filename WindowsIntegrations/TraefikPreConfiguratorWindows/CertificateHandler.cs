@@ -38,6 +38,12 @@ namespace TraefikPreConfiguratorWindows
                 return ExitCode.DirectoryPathMissing;
             }
 
+            if (string.IsNullOrEmpty(certConfiguration))
+            {
+                Logger.LogError(CallInfo.Site(), "Cert configuration missing. Please specify CertsToConfigure option");
+                return ExitCode.InvalidCertConfiguration;
+            }
+
             // 1. Initialize KeyVault Client if params were passed.
             KeyVaultClient keyVaultClient = null;
             if (!string.IsNullOrEmpty(keyVaultUri))

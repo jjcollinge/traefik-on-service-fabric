@@ -2,6 +2,13 @@
 <ApplicationManifest ApplicationTypeName="TraefikType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Parameters>
     <Parameter Name="Traefik_InstanceCount" DefaultValue="-1" />
+
+    <!-- Parameters for Traefik PreConfigurator. These can now be overriden in any Application Parameter to cater to specific cluster needs. -->
+    <Parameter Name="TraefikApplicationInsightsKey" DefaultValue=""/>
+    <Parameter Name="TraefikCertsToConfigure" DefaultValue=""/>
+    <Parameter Name="TraefikKeyVaultUri" DefaultValue=""/>
+    <Parameter Name="TraefikKeyVaultClientId" DefaultValue=""/>
+    <Parameter Name="TraefikKeyVaultClientCert" DefaultValue=""/>
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -21,6 +28,14 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="TraefikPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
+    <!-- Environment Overrides to allow overriding value for different environments -->
+    <EnvironmentOverrides CodePackageRef="Code">
+      <EnvironmentVariable Name="ApplicationInsightsKey" Value="[TraefikApplicationInsightsKey]"/>
+      <EnvironmentVariable Name="CertsToConfigure" Value="[TraefikCertsToConfigure]"/>
+      <EnvironmentVariable Name="KeyVaultUri" Value="[TraefikKeyVaultUri]"/>
+      <EnvironmentVariable Name="KeyVaultClientId" Value="[TraefikKeyVaultClientId]"/>
+      <EnvironmentVariable Name="KeyVaultClientCert" Value="[TraefikKeyVaultClientCert]"/>
+    </EnvironmentOverrides>
     <Policies>
       <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
     </Policies>
