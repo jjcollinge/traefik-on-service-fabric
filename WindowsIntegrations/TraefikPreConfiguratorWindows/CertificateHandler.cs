@@ -103,6 +103,8 @@ namespace TraefikPreConfiguratorWindows
                 var certConfig =
                     new { CertName = certConfigurationParams[0], CertSource = certConfigurationParams[1], CertIdentifier = certConfigurationParams[2] };
 
+                string pfxPassword = null;
+
                 // 3b. Depending on the source of Cert get the PFX for the certs dropped into the directory.
                 if (certConfig.CertSource.Equals("MyLocalMachine", StringComparison.OrdinalIgnoreCase))
                 {
@@ -112,6 +114,8 @@ namespace TraefikPreConfiguratorWindows
                     {
                         return localMachineCertHandler;
                     }
+
+                    pfxPassword = DefaultPfxPassword;
                 }
                 else if (certConfig.CertSource.Equals("KeyVault", StringComparison.OrdinalIgnoreCase))
                 {
@@ -126,6 +130,8 @@ namespace TraefikPreConfiguratorWindows
                     {
                         return keyVaultCertHandlerExitCode;
                     }
+
+                    pfxPassword = string.Empty;
                 }
                 else
                 {
@@ -134,7 +140,7 @@ namespace TraefikPreConfiguratorWindows
                 }
 
                 // 3c. Convert PFX into .Key and .Crt. We are placing openssl next to this exe hence using current directory.
-                ExitCode conversionExitCode = ConvertPfxIntoPemFormat(certConfig.CertName, fullDirectoryPathForCerts, currentExeDirectory);
+                ExitCode conversionExitCode = ConvertPfxIntoPemFormat(certConfig.CertName, fullDirectoryPathForCerts, currentExeDirectory, pfxPassword);
 
                 if (conversionExitCode != ExitCode.Success)
                 {
@@ -190,7 +196,21 @@ namespace TraefikPreConfiguratorWindows
         {
             X509Certificate2 certificate = CertHelpers.FindCertificateByThumbprint(certificateThumbprint, StoreName.My, StoreLocation.LocalMachine);
 
-            return Task.FromResult(SaveCertificatePrivateKeyToDisk(certificate, certificateName, fullDirectoryPath));
+            if (certificate == null)
+            {
+                Logger.LogError(CallInfo.Site(), "Failed to find certificate with name '{0}'", certificateName);
+                return Task.FromResult(ExitCode.CertificateMissingFromSource);
+            }
+
+            if (!certificate.HasPrivateKey)
+            {
+                Logger.LogError(CallInfo.Site(), "Certificate with name '{0}' has missing Private Key", certificateName);
+                return Task.FromResult(ExitCode.PrivateKeyMissingOnCertificate);
+            }
+
+            byte[] rawCertData = certificate.Export(X509ContentType.Pfx, DefaultPfxPassword);
+
+            return Task.FromResult(SaveCertificatePrivateKeyToDisk(rawCertData, certificateName, fullDirectoryPath));
         }
 
         /// <summary>
@@ -232,18 +252,14 @@ namespace TraefikPreConfiguratorWindows
                 return ExitCode.KeyVaultOperationFailed;
             }
 
-            X509Certificate2 certificate;
-            try
+            // Only supporting managed certs for now.
+            if (certificateSecret.Managed != true)
             {
-                certificate = CertHelpers.GetCertificateFromBase64String(certificateSecret.Value);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(CallInfo.Site(), ex, "Failed to decrypt certificate from keyvault. Make sure the cert was uploaded using Certificate tab and not uploaded as a secret");
+                Logger.LogError(CallInfo.Site(), "Failed to decrypt certificate. Only managed certificates are supported. Download the unmanaged cert from secret and reupload it to certificates.");
                 return ExitCode.FailedToDecodeCertFromKeyVault;
             }
 
-            return SaveCertificatePrivateKeyToDisk(certificate, certificateName, fullDirectoryPath);
+            return SaveCertificatePrivateKeyToDisk(Convert.FromBase64String(certificateSecret.Value), certificateName, fullDirectoryPath);
         }
 
         /// <summary>
@@ -253,22 +269,8 @@ namespace TraefikPreConfiguratorWindows
         /// <param name="certificateName">Name of the certificate (This is the name of the pfx file).</param>
         /// <param name="fullDirectoryPath">The full directory path.</param>
         /// <returns>Exit code for the operation.</returns>
-        private static ExitCode SaveCertificatePrivateKeyToDisk(X509Certificate2 certificate, string certificateName, string fullDirectoryPath)
+        private static ExitCode SaveCertificatePrivateKeyToDisk(byte[] rawCertData, string certificateName, string fullDirectoryPath)
         {
-            if (certificate == null)
-            {
-                Logger.LogError(CallInfo.Site(), "Failed to find certificate with name '{0}'", certificateName);
-                return ExitCode.CertificateMissingFromSource;
-            }
-
-            if (!certificate.HasPrivateKey)
-            {
-                Logger.LogError(CallInfo.Site(), "Certificate with name '{0}' has missing Private Key", certificateName);
-                return ExitCode.PrivateKeyMissingOnCertificate;
-            }
-
-            byte[] rawCertData = certificate.Export(X509ContentType.Pfx, DefaultPfxPassword);
-
             Directory.CreateDirectory(fullDirectoryPath);
 
             File.WriteAllBytes(Path.Combine(fullDirectoryPath, certificateName + ".pfx"), rawCertData);
@@ -281,8 +283,9 @@ namespace TraefikPreConfiguratorWindows
         /// <param name="certificateName">Name of the certificate.</param>
         /// <param name="certDirectoryPath">The full directory path for the PFX file. This is also the same path where the PEM and CRT files will be placed.</param>
         /// <param name="opensslExeDirectory">The openssl executable directory.</param>
+        /// <param name="password">PFX password</param>
         /// <returns>Exit code for the operation.</returns>
-        private static ExitCode ConvertPfxIntoPemFormat(string certificateName, string certDirectoryPath, string opensslExeDirectory)
+        private static ExitCode ConvertPfxIntoPemFormat(string certificateName, string certDirectoryPath, string opensslExeDirectory, string password)
         {
             string opensslPath = Path.Combine(opensslExeDirectory, "openssl.exe");
             string pathToPfx = Path.Combine(certDirectoryPath, certificateName + ".pfx");
@@ -292,7 +295,7 @@ namespace TraefikPreConfiguratorWindows
                 opensslPath,
                 pathToPfx,
                 Path.Combine(certDirectoryPath, certificateName + ".key"),
-                DefaultPfxPassword);
+                password);
 
             // We have to start cmd.exe as openssl.exe exit is not read by Process class.
             Logger.LogVerbose(CallInfo.Site(), "Starting extraction of Private key for '{0}' using '{0}'", certificateName, opensslPath);
@@ -300,12 +303,18 @@ namespace TraefikPreConfiguratorWindows
             exportPrivateKeyProcess.WaitForExit();
             Logger.LogVerbose(CallInfo.Site(), "Private key extraction for certificate '{0}' process completed with exit code '{1}'", certificateName, exportPrivateKeyProcess.ExitCode);
 
+            if (exportPrivateKeyProcess.ExitCode != 0)
+            {
+                Logger.LogError(CallInfo.Site(), "Private key extraction failed for certificate name '{0}'", certificateName);
+                return ExitCode.PrivateKeyExtractionFailed;
+            }
+
             string crtExtractionProcessArgs = string.Format(
                 PublicKeyExportArguments,
                 opensslPath,
                 pathToPfx,
                 Path.Combine(certDirectoryPath, certificateName + ".crt"),
-                DefaultPfxPassword);
+                password);
 
             // We have to start cmd.exe as openssl.exe exit is not read by Process class.
             Logger.LogVerbose(CallInfo.Site(), "Starting extraction of Public key from PFX using '{0}'", opensslPath);
@@ -313,13 +322,7 @@ namespace TraefikPreConfiguratorWindows
             exportPublicKeyProcess.WaitForExit();
             Logger.LogVerbose(CallInfo.Site(), "Public key extraction for certificate '{0}' process completed with exit code '{1}'", certificateName, exportPublicKeyProcess.ExitCode);
 
-            if (!File.Exists(Path.Combine(certDirectoryPath, certificateName + ".key")))
-            {
-                Logger.LogError(CallInfo.Site(), "Private key extraction failed for certificate name '{0}'", certificateName);
-                return ExitCode.PrivateKeyExtractionFailed;
-            }
-
-            if (!File.Exists(Path.Combine(certDirectoryPath, certificateName + ".crt")))
+            if (exportPublicKeyProcess.ExitCode != 0)
             {
                 Logger.LogError(CallInfo.Site(), "Public key extraction failed for certificate name '{0}'", certificateName);
                 return ExitCode.PublicKeyExtractionFailed;

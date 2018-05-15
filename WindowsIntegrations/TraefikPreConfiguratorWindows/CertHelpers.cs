@@ -40,20 +40,5 @@ namespace TraefikPreConfiguratorWindows
                 }
             }
         }
-
-        /// <summary>
-        /// Gets the certificate from base64 encoded string.
-        /// </summary>
-        /// <param name="base64String">The base64 encoded string.</param>
-        /// <returns>X509Certificate2 instance.</returns>
-        public static X509Certificate2 GetCertificateFromBase64String(string base64String)
-        {
-            if (string.IsNullOrWhiteSpace(base64String))
-            {
-                throw new ArgumentNullException(nameof(base64String), "Invalid Base64 string passed");
-            }
-
-            return new X509Certificate2(Convert.FromBase64String(base64String), (string)null, X509KeyStorageFlags.Exportable);
-        }
     }
 }
