@@ -1,0 +1,1 @@
+﻿You can download the OpenSSL binaries from https://indy.fulgan.com/SSL/. Get the 64Bit version since SF runs 64Bit operating systems for example openssl-1.0.2o-x64_86-win64

@@ -308,3 +308,5 @@ __pycache__/
 *.cer
 *.key
 *.pem
+/Traefik/ApplicationPackageRoot/TraefikPkg/Code
+!/Traefik/ApplicationPackageRoot/TraefikPkg/Code/traefik.toml
