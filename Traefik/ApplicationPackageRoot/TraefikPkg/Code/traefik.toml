@@ -40,6 +40,13 @@ defaultEntryPoints = ["http", "https"]
 address = ":80"
 [entryPoints.traefik]
 address = ":8080"
+# Enable Https. Refer to https://docs.traefik.io/configuration/entrypoints/#tls for examples
+#[entryPoints.https]
+#  address = ":443"
+#    [entryPoints.https.tls]
+#      [[entryPoints.https.tls.certificates]]
+#      certFile = "certs/snitest.com.crt"
+#      keyFile = "certs/snitest.com.key"
 
 # Enable access logs
 # By default it will write to stdout and produce logs in the textual

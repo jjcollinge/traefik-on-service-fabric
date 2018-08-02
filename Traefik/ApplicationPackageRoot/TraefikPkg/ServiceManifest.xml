@@ -9,6 +9,17 @@
   <CodePackage Name="Code" Version="1.0.0">
     <!-- The SetupEntryPoint is an optional element used to specify a
          program to be executed before the service's code is launched. -->
+    <!--Windows integration. Comment out if running on non-Windows OS.-->
+    <!--<SetupEntryPoint>
+      <ExeHost>
+        <Program>TraefikPreConfiguratorWindows.exe</Program>
+        <Arguments>-UseEnv</Arguments>
+        <WorkingFolder>CodePackage</WorkingFolder>
+        --><!-- Uncomment to log console output (both stdout and stderr) to one of the
+             service's working directories. Do not use in production. --><!--
+        --><!--<ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />--><!--
+      </ExeHost>
+    </SetupEntryPoint>-->
     <EntryPoint>
       <ExeHost>
         <Program>traefik.exe</Program>
@@ -19,6 +30,15 @@
         <!--<ConsoleRedirection FileRetentionCount="5" FileMaxSizeInKb="2048" />-->
       </ExeHost>
     </EntryPoint>
+    <!-- Environment variables used by Treafik PreConfigurator to download and convert certificates. -->
+    <EnvironmentVariables>
+      <EnvironmentVariable Name="ConfigureCerts" Value="Certs"/>
+      <EnvironmentVariable Name="ApplicationInsightsKey" Value="[TraefikApplicationInsightsKey]"/>
+      <EnvironmentVariable Name="CertsToConfigure" Value="[TraefikCertsToConfigure]"/>
+      <EnvironmentVariable Name="KeyVaultUri" Value="[TraefikKeyVaultUri]"/>
+      <EnvironmentVariable Name="KeyVaultClientId" Value="[TraefikKeyVaultClientId]"/>
+      <EnvironmentVariable Name="KeyVaultClientCert" Value="[TraefikKeyVaultClientCert]"/>
+    </EnvironmentVariables>
   </CodePackage>
   <!-- Config package is the contents of the Config directoy under PackageRoot that contains an 
        independently-updateable and versioned set of custom configuration settings for your service. -->
@@ -29,6 +49,8 @@
            listen. Please note that if your service is partitioned, this port is shared with 
            replicas of different partitions that are placed in your code. -->
       <Endpoint Name="TraefikTypeEndpoint" UriScheme="http" Port="80" />
+      <!--HTTPS port will not work without enabling SSL termination on Traefik. Refer to https://docs.traefik.io/configuration/entrypoints/-->
+      <!--<Endpoint Name="TraefikTypeEndpoint" UriScheme="https" Port="443" />-->
       <Endpoint Name="TraefikTypeAPIEndpoint" UriScheme="http" Port="8080" />
     </Endpoints>
   </Resources>
