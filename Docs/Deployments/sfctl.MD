@@ -83,7 +83,7 @@ apiversion = "3.0"
 >      <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
 >    </Policies>-->
 >```
->You can also delete or comment out the `Principals` section, as it no longer required.
+>You can also delete or comment out the `Principals` section, as it is no longer required.
 >
 >
 >***ServiceManifest.xml***
