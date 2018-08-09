@@ -63,18 +63,48 @@ apiversion = "3.0"
    insecureskipverify = true
 ```
 
+> **NOTE:** If you are deploying to a Service Fabric Linux cluster, you have to update `traefik.toml`, `ApplicationManifest.xml`, and `ServiceManifest.xml` as shown below: 
+>
+>***traefik.toml***
+>
+>Update Traefik's HTTP endpoint to a high port (e.g. 8081)
+>
+>```
+>[entryPoints]
+>[entryPoints.http]
+>address = ":8081"
+>```
+>
+>***AplicationManifest.xml***
+>
+>Delete or comment out the `RunAsPolicy`
+>```
+>    <!--<Policies>
+>      <RunAsPolicy CodePackageRef="Code" UserRef="AdminUser" EntryPointType="All" />
+>    </Policies>-->
+>```
+>You can also delete or comment out the `Principals` section, as it no longer required.
+>
+>
+>***ServiceManifest.xml***
+>
+>Update Træfik's proxy endpoint to use the previouly configured high port:
+>
+>```
+><Endpoint Name="TraefikTypeEndpoint" UriScheme="http" Port="8081" />
+>```
+>Finally, remove the `.exe` file extension from the program name.   
+>
+>```
+>    <EntryPoint>
+>      <ExeHost>
+>        <Program>traefik</Program>
+>        ...
+>      </ExeHost>
+>    </EntryPoint>
+>```
+
 7. *Optional*  You can choose to enable a watchdog service which will report stats and check Træfik is routing correctly by sending synthetic requests and recording the results. The results of these checks are sent to Application Insights. If you would like this enabled follow [the guide here before continuing](../EnableWatchdog.MD).
-
-> **NOTE:** If you are running on Linux/Mac you have to change the ServiceManifest.xml as below: 
-
-```
-   <EntryPoint>
-      <ExeHost>
-        <Program>traefik</Program>
-        ...
-      </ExeHost>
-    </EntryPoint>
-```
 
 8. Now we need to connect `sfctl` to our cluster using a suitable authentication method
 
@@ -93,6 +123,9 @@ apiversion = "3.0"
     `sfctl application create --app-name fabric:/Traefik --app-type TraefikType --app-version 1.0.4`
 
 12. To be able to ingress external requests via Træfik you'll need to open up and map the relevant ports on your public load balancer. For clusters on Azure, this will be your Azure Load Balancer. The default ports are; `tcp/80` (proxy) and `tcp/8080` (API) but these can be configured in `$REPO_ROOT\Traefik\ApplicationPackageRoot\TraefikPkg\Code\traefik.toml` and in `$REPO_ROOT\Traefik\Traefik\ApplicationPackageRoot\TraefikPkg\ServiceManifest.xml`.
+
+>**NOTE:** If you have applied the changes for Linux clusters in step 6, you can map Traefik's proxy
+>endpoint using a high port to a standard port (e.g. 80 or 443) on the Azure Load Balancer.
 
 13. Once the load balancer has been configured to route traffic on the required ports, you should be able to visit the Træfik dashboard at http[s]://[clusterfqdn]:8080 if you have it enabled.
 
