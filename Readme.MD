@@ -117,7 +117,7 @@ If you would like to update the Træfik binary, certs or traefik.toml file. You 
 ## Multi-Environment support and automated management of certificates
 One of the issues that comes up during the setup is the need to package and deploy certificates along with Træfik. This can prove difficult if
 1. You have your applications getting deployed to multiple environments using different certificates
-2. Your build system does not have access to certificates.
+2. Your build system does not have access to certificates
 
 To solve these issues easily you can use [PreConfiguratorForTraefikOnServiceFabric](https://github.com/RamjotSingh/PreConfiguratorForTraefikOnServiceFabric) to automate fetching of certificates
 from LocalMachine or KeyVault and process them for Træfik to use. This eliminates the need to package any certificate along with Træfik.
