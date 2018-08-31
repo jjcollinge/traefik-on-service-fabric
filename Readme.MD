@@ -114,6 +114,14 @@ To learn more about how Træfik works and how you can configure is, please [see 
 ## Updating Traefik
 If you would like to update the Træfik binary, certs or traefik.toml file. You can use Azure Service Fabric's built in 'rolling updates' as you would with any other application package.
 
+## Multi-Environment support and automated management of certificates
+One of the issues that comes up during the setup is the need to package and deploy certificates along with Træfik. This can prove difficult if
+1. You have your applications getting deployed to multiple environments using different certificates
+2. Your build system does not have access to certificates
+
+To solve these issues easily you can use [PreConfiguratorForTraefikOnServiceFabric](https://github.com/RamjotSingh/PreConfiguratorForTraefikOnServiceFabric) to automate fetching of certificates
+from LocalMachine or KeyVault and process them for Træfik to use. This eliminates the need to package any certificate along with Træfik.
+
 ## Contributing 
 
 See our [Contributing guide](Contributing.MD)
@@ -123,3 +131,4 @@ See our [Contributing guide](Contributing.MD)
 - Go SF Management SDK: https://github.com/jjcollinge/servicefabric
 - sfctl for property management: https://github.com/Azure/service-fabric-cli/pull/53
 - Application Insights Watchdog: https://github.com/lawrencegripper/traefik-appinsights-watchdog
+- Pre-configurator for multi-environment deploments: https://github.com/RamjotSingh/PreConfiguratorForTraefikOnServiceFabric
