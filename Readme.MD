@@ -57,6 +57,9 @@ The Service Fabric service requires the UriScheme attrbute set in its Endpoint R
       <Endpoint Protocol="http" Name="ServiceEndpoint" Type="Input" Port="9001" UriScheme="http" />
     </Endpoints>
   </Resources>` 
+  
+> **Note:**
+Stateless Services and Guest Executables are fully supported with experimental support for Stateful Services. The discussion around more complete support for Stateful Service is ongoing. See [Issue 45 to follow the progress](https://github.com/jjcollinge/traefik-on-service-fabric/issues/45).
 
 ## Dynamically updating Service labels
 Once you've deployed your service with some default labels, you may need to change the way Træfik is routing requests without redeploying. You can overwrite and add new labels to a named service using Service Fabric's Property Management API. Træfik will then pick up these new/updated labels and reconfigure itself.
