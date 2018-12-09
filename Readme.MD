@@ -89,7 +89,7 @@ sfctl property put --name-id "GettingStartedApplication/WebService" --property-n
 > The command above is current as of sftcl v4.0.0.
 
 ### Available Labels
-The current list of available labels is documented [here](https://master--traefik-docs.netlify.com/configuration/backends/servicefabric/). This is subject to change as we expand our capabilities.
+The current list of available labels is documented [here](https://docs.traefik.io/configuration/backends/servicefabric/#labels). This is subject to change as we expand our capabilities.
 
 ## Debugging 
 Both services will output logs to `stdout` and `stderr`. To enable these logs uncomment the `ConsoleRedirection` line in both `ServiceManifest.xml` files. 
