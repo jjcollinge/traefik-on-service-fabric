@@ -5,7 +5,7 @@
 
 param(
     [string]$version,
-    [string]$urlWatchdog = "https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/20180503100605-bc72588/traefik-appinsights-watchdog.exe"
+    [string]$urlWatchdog = "https://github.com/lawrencegripper/traefik-appinsights-watchdog/releases/download/20190114085656-a7e73a9/traefik-appinsights-watchdog.exe"
 )
 
 while (!($version)) {

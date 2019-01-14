@@ -41,4 +41,4 @@ Enable Application Insight Traefik Watchdog
       </ExeHost>
 ```
 
-3. *Optional* Review, add or adjust any arguments for full details on the watchdog see it's [repository here](https://github.com/lawrencegripper/traefik-appinsights-watchdog)
+3. *Optional* Review, add or adjust any arguments (i.e.: credentials to call Traefik's "/health" endpoint). For full details on the watchdog see it's [repository here](https://github.com/lawrencegripper/traefik-appinsights-watchdog)
