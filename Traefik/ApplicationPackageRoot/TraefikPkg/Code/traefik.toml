@@ -13,8 +13,9 @@ debug = true
 # If not defined, logs to stdout
 #
 # Optional
-#
-# traefikLogsFile = "log/traefik.log"
+# 
+# [traefiklog]
+# filePath = "log/traefik.log"
 
 # Log level
 #
