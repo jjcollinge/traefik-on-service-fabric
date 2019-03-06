@@ -7,7 +7,7 @@
       <Extensions>
         <Extension Name="Traefik">
           <Labels xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-            <Label Key="traefik.expose">true</Label>
+            <Label Key="traefik.enable">true</Label>
             <Label Key="traefik.backend.loadbalancer.stickiness">true</Label>
             <Label Key="traefik.frontend.rule.routecheck">PathPrefix: /TraefikType/Watchdog</Label>
           </Labels>
