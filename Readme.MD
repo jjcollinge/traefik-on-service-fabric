@@ -1,3 +1,8 @@
+__NOTICE:__
+The Azure Service Fabric provider for Traefik is maintained at https://github.com/containous/traefik-extra-service-fabric. This repository was created before the work was merged as a way to track issues and document the provider. There is still some useful information, demos and tools in this repository which will continue to exist but we will not be actively maintaining this content. Therefore, if you are having trouble with the provider, please open an issue on the Containous repository or reach out to the Containous team directly on their [Slack](https://slack.traefik.io/). If you want to maintain your own fork of this repository please feel free to in line with the LICENSE.
+
+--------------
+
 > **Disclaimer:**
 Azure Service Fabric integration was added to Træfik in [version 1.5](https://github.com/containous/traefik/releases/tag/v1.5.0) - please use this version or later.
 
